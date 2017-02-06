@@ -22,6 +22,7 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+        kryonetVersion = '2.21-2'
     }
 
     repositories {
@@ -29,6 +30,19 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "http://clojars.org/repo" }
+    }
+}
+
+project(":server") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile project(":core")
+//        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+//        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+//        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -71,13 +85,13 @@ project(":android") {
 project(":core") {
     apply plugin: "java"
 
-
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.kotcrab.vis:vis-ui:1.2.4"
+        compile "kryonet:kryonet:$kryonetVersion"
     }
 }
 
