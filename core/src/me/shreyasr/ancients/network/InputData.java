@@ -1,15 +1,18 @@
 package me.shreyasr.ancients.network;
 
-import me.shreyasr.ancients.util.InputState;
 
-public class InputPacket {
+public class InputData {
 
-    public final InputState w;
-    public final InputState a;
-    public final InputState s;
-    public final InputState d;
+    public boolean w;
+    public boolean a;
+    public boolean s;
+    public boolean d;
 
-    public InputPacket(InputState w, InputState a, InputState s, InputState d) {
+    protected InputData() {
+
+    }
+
+    public InputData(boolean w, boolean a, boolean s, boolean d) {
         this.w = w;
         this.a = a;
         this.s = s;
@@ -18,7 +21,7 @@ public class InputPacket {
 
     @Override
     public String toString() {
-        return "InputPacket{" +
+        return "InputData{" +
                 "w=" + w +
                 ", a=" + a +
                 ", s=" + s +

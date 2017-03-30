@@ -4,33 +4,25 @@ import com.badlogic.gdx.InputProcessor;
 
 public class AccumulatingInputProcessor implements InputProcessor {
 
-    private InputState[] keys = new InputState[256];
+    private int[] keys = new int[256];
 
     public AccumulatingInputProcessor(int... keysListened) {
-        for (int key : keysListened) {
-            keys[key] = InputState.STATUS_UP;
-        }
-    }
-
-    public void update() {
         for (int i = 0; i < keys.length; i++) {
-            if (keys[i] == InputState.STATUS_PRESSED) {
-                keys[i] = InputState.STATUS_DOWN;
-            }
-            if (keys[i] == InputState.STATUS_RELEASED) {
-                keys[i] = InputState.STATUS_UP;
-            }
+            keys[i] = -1;
+        }
+        for (int keyListened : keysListened) {
+            keys[keyListened] = 0;
         }
     }
 
-    public InputState get(int key) {
-        return keys[key];
+    public boolean get(int key) {
+        return keys[key] == 1;
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keys[keycode] != null) {
-            keys[keycode] = InputState.STATUS_PRESSED;
+        if (keys[keycode] != -1) {
+            keys[keycode] = 1;
             return true;
         }
         return false;
@@ -38,8 +30,8 @@ public class AccumulatingInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        if (keys[keycode] != null) {
-            keys[keycode] = InputState.STATUS_RELEASED;
+        if (keys[keycode] != -1) {
+            keys[keycode] = 0;
             return true;
         }
         return false;

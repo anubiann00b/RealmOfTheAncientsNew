@@ -21,6 +21,8 @@ public class TexTransformComponent implements Component {
     public boolean hide;
 
     public Color color;
+    
+    protected TexTransformComponent() { }
 
     public TexTransformComponent(int width, int height) {
         this.screenWidth = width;

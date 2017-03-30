@@ -1,81 +1,115 @@
 package me.shreyasr.ancients;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import me.shreyasr.ancients.component.PosComponent;
-import me.shreyasr.ancients.component.TexComponent;
+import com.esotericsoftware.kryonet.Client;
 import me.shreyasr.ancients.component.TexTransformComponent;
-import me.shreyasr.ancients.network.PacketQueue;
-import me.shreyasr.ancients.system.*;
+import me.shreyasr.ancients.game.GamePlayer;
+import me.shreyasr.ancients.game.GameState;
+import me.shreyasr.ancients.network.CustomPacketListener;
+import me.shreyasr.ancients.network.InputData;
+import me.shreyasr.ancients.util.AccumulatingInputProcessor;
+import me.shreyasr.ancients.util.GameStateQueue;
+import me.shreyasr.ancients.util.MathHelper;
 
 public class GameScreen extends ScreenAdapter {
-
-
+    
+    public int id;
+    
+    private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
     public final SpriteBatch batch;
     public final ShapeRenderer shape;
-
-    public final Engine engine = new Engine();
-    public final Entity player = new Entity();
 
     public final OrthographicCamera camera = new OrthographicCamera(640, 480);
     public final ExtendViewport viewport = new ExtendViewport(800, 600, 1280, 720, camera);
 
-    public final PacketQueue packetQueue = new PacketQueue();
-
-    private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+    public final GameStateQueue gameStateQueue = new GameStateQueue();
+    public final Client client;
+    
+    private AccumulatingInputProcessor input = new AccumulatingInputProcessor(Input.Keys.W, Input.Keys.A, Input.Keys.S, Input.Keys.D);
+    private OrthogonalTiledMapRenderer renderer;
 
     private boolean initialized = false;
 
-    public GameScreen(SpriteBatch batch, ShapeRenderer shape) {
+    public GameScreen(SpriteBatch batch, ShapeRenderer shape, Client client) {
         this.batch = batch;
         this.shape = shape;
+        this.client = client;
+        client.addListener(new CustomPacketListener()
+                .doOnConnect(conn -> id = conn.getID())
+                .doOnGameState((conn, gameState) -> gameStateQueue.put(gameState)));
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(inputMultiplexer);
-
-        player
-                .add(new PosComponent(100, 100))
-                .add(new TexComponent(Asset.PLAYER))
-                .add(new TexTransformComponent(64, 64));
-
-        engine.addEntity(player);
-
-        int priority = 0;
-
-        engine.addSystem(new InputSystem(this, ++priority));
-        engine.addSystem(new PacketProcessSystem(this, ++priority));
-
-        engine.addSystem(new ClearFrameSystem(++priority));
-        engine.addSystem(new CameraUpdateSystem(this, ++priority));
-        engine.addSystem(new MapRenderSystem(this, ++priority));
-        engine.addSystem(new BatchBeginSystem(this, ++priority));
-        engine.addSystem(new RenderSystem(this, ++priority));
-        engine.addSystem(new BatchEndSystem(this, ++priority));
-
-        inputMultiplexer.addProcessor(engine.getSystem(InputSystem.class).input);
-
+        renderer = new OrthogonalTiledMapRenderer(Asset.MAP.getMap(), 4f, batch);
+        inputMultiplexer.addProcessor(input);
         initialized = true;
+    }
+    
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
     }
 
     @Override
     public void render(float delta) {
-        if (initialized) {
-            engine.update(Gdx.graphics.getRawDeltaTime() * 1000);
+        if (!initialized) {
+            return;
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
+    
+        InputData inputData = new InputData(
+                input.get(Input.Keys.W),
+                input.get(Input.Keys.A),
+                input.get(Input.Keys.S),
+                input.get(Input.Keys.D));
+        client.sendUDP(inputData);
+        
+        GameState gameStateToDraw = gameStateQueue.getInterpolatedCurrentState(System.currentTimeMillis());
+        GamePlayer myPlayer = gameStateToDraw.players.getById(id);
+        if (myPlayer == null) myPlayer = new GamePlayer(id, Asset.PLAYER, 0, 0, null);
+    
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
+        camera.position.set(
+                MathHelper.clamp(viewport.getWorldWidth()/2,  myPlayer.x, 3840- viewport.getWorldWidth()/2),
+                MathHelper.clamp(viewport.getWorldHeight()/2, myPlayer.y, 3840- viewport.getWorldHeight() /2),
+                0);
+        viewport.apply();
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+    
+        renderer.setView(camera);
+        renderer.render();
+    
+        batch.begin();
+        
+        for (GamePlayer player : gameStateToDraw.players) {
+            TexTransformComponent ttc = player.ttc;
+            
+            if (ttc.hide) return;
+    
+            Texture texture = player.asset.getTex();
+            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    
+            batch.setColor(ttc.color);
+            batch.draw(texture, player.x - ttc.originX, player.y - ttc.originY, ttc.originX, ttc.originY,
+                    ttc.screenWidth, ttc.screenHeight, 1, 1, ttc.rotation,
+                    ttc.srcX, ttc.srcY, ttc.srcWidth, ttc.srcHeight, false, false);
+        }
+    
+        batch.end();
     }
 
 }

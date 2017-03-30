@@ -30,7 +30,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { url "http://clojars.org/repo" }
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -40,9 +40,6 @@ project(":server") {
 
     dependencies {
         compile project(":core")
-//        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-//        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-//        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -91,7 +88,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.kotcrab.vis:vis-ui:1.2.4"
-        compile "kryonet:kryonet:$kryonetVersion"
+        compile "com.github.anubiann00b:kryonet:6108b3b5"
     }
 }
 
