@@ -1,9 +1,8 @@
 package me.shreyasr.ancients.component;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
 
-public class TexTransformComponent implements Component {
+public class TexTransformComponent {
 
     public int screenWidth;
     public int screenHeight;
