@@ -12,7 +12,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.esotericsoftware.kryonet.Client;
-import me.shreyasr.ancients.component.TexTransformComponent;
+import me.shreyasr.ancients.component.Pos;
+import me.shreyasr.ancients.component.TexTransform;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.GameState;
 import me.shreyasr.ancients.network.CustomPacketListener;
@@ -76,15 +77,21 @@ public class GameScreen extends ScreenAdapter {
         client.sendUDP(inputData);
         
         GameState gameStateToDraw = gameStateQueue.getInterpolatedCurrentState(System.currentTimeMillis());
+        
+        Pos playerPos;
         GamePlayer myPlayer = gameStateToDraw.players.getById(id);
-        if (myPlayer == null) myPlayer = new GamePlayer(id, Asset.PLAYER, 0, 0, null);
+        if (myPlayer != null) {
+            playerPos = myPlayer.pos;
+        } else {
+            playerPos = new Pos(0, 0);
+        }
     
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         camera.position.set(
-                MathHelper.clamp(viewport.getWorldWidth()/2,  myPlayer.x, 3840- viewport.getWorldWidth()/2),
-                MathHelper.clamp(viewport.getWorldHeight()/2, myPlayer.y, 3840- viewport.getWorldHeight() /2),
+                MathHelper.clamp(viewport.getWorldWidth()/2,  playerPos.x, 3840- viewport.getWorldWidth()/2),
+                MathHelper.clamp(viewport.getWorldHeight()/2, playerPos.y, 3840- viewport.getWorldHeight() /2),
                 0);
         viewport.apply();
         camera.update();
@@ -96,7 +103,7 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
         
         for (GamePlayer player : gameStateToDraw.players) {
-            TexTransformComponent ttc = player.ttc;
+            TexTransform ttc = player.ttc;
             
             if (ttc.hide) return;
     
@@ -104,7 +111,7 @@ public class GameScreen extends ScreenAdapter {
             texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     
             batch.setColor(ttc.color);
-            batch.draw(texture, player.x - ttc.originX, player.y - ttc.originY, ttc.originX, ttc.originY,
+            batch.draw(texture, player.pos.x - ttc.originX, player.pos.y - ttc.originY, ttc.originX, ttc.originY,
                     ttc.screenWidth, ttc.screenHeight, 1, 1, ttc.rotation,
                     ttc.srcX, ttc.srcY, ttc.srcWidth, ttc.srcHeight, false, false);
         }

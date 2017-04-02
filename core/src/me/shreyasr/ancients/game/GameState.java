@@ -7,39 +7,48 @@ public class GameState implements Comparable<GameState> {
     }
     
     private long time;
-    public EntitySet players = new EntitySet();
+    public PlayerSet players;
     
     protected GameState() { }
     
     public GameState(long time) {
+        this(time, new PlayerSet());
+    }
+    
+    public GameState(long time, PlayerSet players) {
         this.time = time;
+        this.players = players;
+    }
+    
+    public GameState(GameState other) {
+        this(other.time, new PlayerSet(other.players));
     }
     
     /**
      * Returns a GameState representing the state after delta millis. Only called on server.
      */
-    public GameState update(long delta) {
-        GameState newState = new GameState(time + delta);
+    public void update(long delta) {
+        time += delta;
         for (GamePlayer player : players) {
-            GamePlayer newPlayer = new GamePlayer(player.id, player.asset,
-                    player.x + (player.input.a ? -10 : 0) + (player.input.d ? 10 : 0),
-                    player.y + (player.input.s ? -10 : 0) + (player.input.w ? 10 : 0), player.ttc);
-            newState.players.put(player.id, newPlayer);
+            player.update();
         }
-        return newState;
+    }
+    
+    private void interpolateTo(GameState next, long timeToInterpolateTo) {
+        float percentageToNext = (float)(timeToInterpolateTo - this.time) / (next.time - this.time);
+        time = timeToInterpolateTo;
+        
+        for (GamePlayer player : players) {
+            GamePlayer nextPlayer = next.players.getById(player.id);
+            player.interpolateTo(nextPlayer, percentageToNext);
+        }
     }
     
     public static GameState interpolate(GameState previous, GameState next, long time) {
-        float percentageToNext = (float)(time - previous.time) / (next.time - previous.time);
-        GameState interpolatedState = new GameState(time);
-        for (GamePlayer prevPlayer : previous.players) {
-            GamePlayer nextPlayer = next.players.getById(prevPlayer.id);
-            
-            GamePlayer newPlayer = new GamePlayer(prevPlayer.id, prevPlayer.asset,
-                    prevPlayer.x * (1-percentageToNext) + nextPlayer.x * percentageToNext,
-                    prevPlayer.y * (1-percentageToNext) + nextPlayer.y * percentageToNext, prevPlayer.ttc);
-            interpolatedState.players.put(prevPlayer.id, newPlayer);
-        }
+        GameState interpolatedState = new GameState(previous);
+        
+        interpolatedState.interpolateTo(next, time);
+        
         return interpolatedState;
     }
     

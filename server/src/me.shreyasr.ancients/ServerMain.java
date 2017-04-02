@@ -3,7 +3,8 @@ package me.shreyasr.ancients;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
-import me.shreyasr.ancients.component.TexTransformComponent;
+import me.shreyasr.ancients.component.Pos;
+import me.shreyasr.ancients.component.TexTransform;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.GameState;
 import me.shreyasr.ancients.network.CustomPacketListener;
@@ -40,7 +41,7 @@ public class ServerMain {
                     if (conn.isConnected() && id != -1) {
                         GamePlayer player = currentGameState.players.getById(id);
                         if (player == null) {
-                            player = new GamePlayer(id, Asset.PLAYER, 100, 100, new TexTransformComponent(64, 64));
+                            player = new GamePlayer(id, Asset.PLAYER, new Pos(100, 100), new TexTransform(64, 64));
                             currentGameState.players.put(id, player);
                         }
                     }
@@ -50,7 +51,9 @@ public class ServerMain {
                     player.input = inputDataQueue.getNextInput(player.id, processTime);
                 }
                 
-                currentGameState = currentGameState.update(16);
+                currentGameState = new GameState(currentGameState);
+                currentGameState.update(16);
+                
                 server.sendToAllUDP(currentGameState);
                 
                 try {
