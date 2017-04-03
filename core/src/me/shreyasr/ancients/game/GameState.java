@@ -27,10 +27,11 @@ public class GameState implements Comparable<GameState> {
     /**
      * Returns a GameState representing the state after delta millis. Only called on server.
      */
-    public void update(long delta) {
-        time += delta;
+    @SuppressWarnings("SameParameterValue")
+    public void update(int deltaMillis) {
+        time += deltaMillis;
         for (GamePlayer player : players) {
-            player.update();
+            player.update(deltaMillis);
         }
     }
     

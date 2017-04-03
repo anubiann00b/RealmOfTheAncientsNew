@@ -3,11 +3,10 @@ package me.shreyasr.ancients;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
-import me.shreyasr.ancients.component.Pos;
-import me.shreyasr.ancients.component.TexTransform;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.GameState;
 import me.shreyasr.ancients.network.CustomPacketListener;
+import me.shreyasr.ancients.util.EntityFactory;
 import me.shreyasr.ancients.util.InputDataQueue;
 import me.shreyasr.ancients.util.KryoRegistrar;
 
@@ -29,7 +28,7 @@ public class ServerMain {
                 .doOnInputData((conn, inputData) -> inputDataQueue.putInputData(conn.getID(), inputData, System.currentTimeMillis()))
                 .doOnDisconnect(conn -> { }));
         
-        new Thread(() -> {
+//        new Thread(() -> {
             GameState currentGameState = new GameState(System.currentTimeMillis() - 16);
             
             while(true) {
@@ -41,7 +40,7 @@ public class ServerMain {
                     if (conn.isConnected() && id != -1) {
                         GamePlayer player = currentGameState.players.getById(id);
                         if (player == null) {
-                            player = new GamePlayer(id, Asset.PLAYER, new Pos(100, 100), new TexTransform(64, 64));
+                            player = EntityFactory.createGamePlayer(id);
                             currentGameState.players.put(id, player);
                         }
                     }
@@ -62,6 +61,6 @@ public class ServerMain {
                     e.printStackTrace();
                 }
             }
-        }, "GameUpdateThread").start();
+//        }, "GameUpdateThread").start();
     }
 }

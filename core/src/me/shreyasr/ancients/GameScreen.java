@@ -106,6 +106,11 @@ public class GameScreen extends ScreenAdapter {
             TexTransform ttc = player.ttc;
             
             if (ttc.hide) return;
+            
+            ttc.srcX = player.animation.getSrcX();
+            ttc.srcY = player.animation.getSrcY();
+    
+            System.out.println(player.animation);
     
             Texture texture = player.asset.getTex();
             texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);

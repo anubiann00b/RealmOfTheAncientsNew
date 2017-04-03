@@ -39,8 +39,9 @@ public class TexTransform {
         this.color = color;
     }
     
-    public TexTransform(int width, int height) {
-        this(width, height, width/2, height/2, 0, 0, width, height, 0, false, Color.WHITE);
+    public TexTransform(int width, int height, int scale) {
+        this(width*scale, height*scale, (width*scale)/2, (height*scale)/2,
+                0, 0, width, height, 0, false, Color.WHITE);
     }
     
     public TexTransform(TexTransform ttc) {

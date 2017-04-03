@@ -1,6 +1,7 @@
 package me.shreyasr.ancients.game;
 
 import me.shreyasr.ancients.Asset;
+import me.shreyasr.ancients.component.DirectionalAnimation;
 import me.shreyasr.ancients.component.Pos;
 import me.shreyasr.ancients.component.TexTransform;
 import me.shreyasr.ancients.network.InputData;
@@ -14,26 +15,34 @@ public class GamePlayer {
     public Asset asset;
     public TexTransform ttc;
     public Pos pos;
+    public Pos vel = new Pos(0, 0);
+    public DirectionalAnimation animation;
     
     public GamePlayer() { }
     
-    public GamePlayer(int id, Asset asset, Pos pos, TexTransform ttc) {
+    public GamePlayer(int id, Asset asset, Pos pos, TexTransform ttc, DirectionalAnimation animation) {
         this.id = id;
         this.asset = asset;
         this.pos = pos;
         this.ttc = ttc;
+        this.animation = animation;
     }
     
     public GamePlayer(GamePlayer other) {
-        this(other.id, other.asset, new Pos(other.pos), new TexTransform(other.ttc));
+        this(other.id, other.asset, new Pos(other.pos), new TexTransform(other.ttc), new DirectionalAnimation(other.animation));
         this.input = other.input;
     }
     
-    public void update() {
-        if (input.d) pos.x += 5;
-        if (input.a) pos.x -= 5;
-        if (input.w) pos.y += 5;
-        if (input.s) pos.y -= 5;
+    public void update(int deltaMillis) {
+        if (input.d) vel.x = 5;
+        if (input.a) vel.x = -5;
+        if (input.w) vel.y = 5;
+        if (input.s) vel.y = -5;
+        
+        animation.update(deltaMillis, vel.x != 0 || vel.y != 0, vel.getDirDegrees());
+        
+        pos.x += vel.x;
+        pos.y += vel.y;
     }
     
     public void interpolateTo(GamePlayer nextPlayer, float percentageToNext) {

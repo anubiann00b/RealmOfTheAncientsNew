@@ -16,6 +16,10 @@ public class Pos {
         this(other.x, other.y);
     }
     
+    public float getDirDegrees() {
+        return (float) Math.toDegrees(Math.atan2(y, x));
+    }
+    
     @Override
     public String toString() {
         return "Pos{" +
