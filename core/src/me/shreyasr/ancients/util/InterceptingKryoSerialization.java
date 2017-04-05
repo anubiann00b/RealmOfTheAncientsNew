@@ -43,7 +43,7 @@ public class InterceptingKryoSerialization extends KryoSerialization {
         ByteBuffer countingBuffer = buffer.duplicate();
         countingOutput.setBuffer(countingBuffer);
     
-        kryoRef.getContext().put("connection", connection);
+//        kryoRef.getContext().put("connection", connection);
         kryoRef.writeClassAndObject(countingOutput, object);
         
         int byteCount = countingBuffer.position();

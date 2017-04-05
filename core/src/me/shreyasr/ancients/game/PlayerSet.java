@@ -32,6 +32,10 @@ public class PlayerSet implements Iterable<GamePlayer> {
         players.put(id, entity);
     }
     
+    public void remove(int id) {
+        players.remove(id);
+    }
+    
     public Iterator<GamePlayer> iterator() {
         return players.values().iterator();
     }
