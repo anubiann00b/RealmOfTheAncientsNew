@@ -8,32 +8,30 @@ import com.esotericsoftware.minlog.Log;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.TreeMap;
 
 public class InterceptingKryoSerialization extends KryoSerialization {
     
     private final Kryo kryoRef;
     private final ByteBufferOutput countingOutput = new ByteBufferOutput();
     
-    TreeMap<Long, Integer> readByteCountSamples = new TreeMap<>();
-    
     private TimeBasedRollingAverage readByteTimeAverage = new TimeBasedRollingAverage(1000);
     private TimeBasedRollingAverage writtenByteTimeAverage = new TimeBasedRollingAverage(1000);
     
-    public int getReadByteCount() {
-        return readByteTimeAverage.get();
-    }
+    public int getReadByteCount() { return readByteTimeAverage.get(); }
+    public int getWrittenByteCount() { return writtenByteTimeAverage.get(); }
     
-    public int getWrittenByteCount() {
-        return writtenByteTimeAverage.get();
-    }
-    
+    /**
+     * Do the same thing `new KryoSerialization()` does, then pass the Kryo object to our constructor to grab a reference
+     */
     public InterceptingKryoSerialization() {
         this(new Kryo());
         kryoRef.setReferences(false);
         kryoRef.setRegistrationRequired(true);
     }
     
+    /**
+     * Defer to parent, but grab a reference to the private kryo object
+     */
     public InterceptingKryoSerialization(Kryo kryo) {
         super(kryo);
         kryoRef = kryo;
@@ -43,7 +41,6 @@ public class InterceptingKryoSerialization extends KryoSerialization {
         ByteBuffer countingBuffer = buffer.duplicate();
         countingOutput.setBuffer(countingBuffer);
     
-//        kryoRef.getContext().put("connection", connection);
         kryoRef.writeClassAndObject(countingOutput, object);
         
         int byteCount = countingBuffer.position();
@@ -64,12 +61,12 @@ public class InterceptingKryoSerialization extends KryoSerialization {
     @Override
     public synchronized Object read(Connection connection, ByteBuffer buffer) {
         Object obj = super.read(connection, buffer);
-    
-        ByteBuffer countingBuffer = buffer.duplicate();
-        int byteCount = countingBuffer.position();
+        
+        ByteBuffer countingBuffer = buffer.duplicate(); // Makes duplicate backed by same data with it's own position
+        int byteCount = countingBuffer.position(); // Current position is at the end of the data
         byte[] bytesWritten = new byte[byteCount];
-        countingBuffer.position(0);
-        countingBuffer.get(bytesWritten, 0, byteCount);
+        countingBuffer.position(0); // Reset the position so we read from the beginning
+        countingBuffer.get(bytesWritten, 0, byteCount); // Reads byteCount bytes into bytesWritten
     
         Log.trace("kryointerceptor", "Read bytes: " + byteCount + ", " + obj
                 + " as " + Arrays.toString(bytesWritten).replace(", ", " "));
