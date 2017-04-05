@@ -24,7 +24,7 @@ public class InputDataQueue {
     public InputData getNextInput(int clientId, long processTime) {
         SingleClientInputDataQueue singleClientQueue = clientInputDataQueues.get(clientId);
         if (singleClientQueue == null) {
-            Log.info("inputqueue", "No SingleClientQueue for client " + clientId);
+            Log.trace("inputqueue", "No SingleClientQueue for client " + clientId);
             return new InputData(false, false, false, false, null, false, false);
         }
         return singleClientQueue.getNextInput(processTime);

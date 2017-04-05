@@ -31,7 +31,7 @@ public class GameState implements Comparable<GameState> {
     public void update(int deltaMillis) {
         time += deltaMillis;
         for (GamePlayer player : players) {
-            player.update(deltaMillis);
+            player.update(deltaMillis, players);
         }
     }
     

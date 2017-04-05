@@ -1,6 +1,7 @@
 package me.shreyasr.ancients.util;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 import com.esotericsoftware.kryo.Kryo;
 import me.shreyasr.ancients.Asset;
 import me.shreyasr.ancients.component.*;
@@ -26,6 +27,10 @@ public class KryoRegistrar {
         kryo.register(DirAnim.class);
         kryo.register(DirAnim.Frame.class);
         kryo.register(DirAnim.Frame[].class);
+        kryo.register(WeaponHitbox.class);
+        kryo.register(CircleSlice.class);
+        kryo.register(Rectangle.class);
+        kryo.register(Hitbox.class);
         kryo.register(Color.class);
         kryo.register(HashMap.class);
     }

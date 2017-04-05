@@ -37,7 +37,7 @@ public class CustomPacketListener implements Listener {
     
     @Override
     public void connected(Connection conn) {
-        Log.info("connection-listener", "Connected to: " + conn.getRemoteAddressTCP() + ", ID: " + conn.getID());
+        Log.info("connection-listener", "Connected to: " + conn.getRemoteAddressUDP() + ", ID: " + conn.getID());
         doOnConnect.accept(conn);
     }
     
@@ -49,7 +49,7 @@ public class CustomPacketListener implements Listener {
     
     @Override
     public void idle(Connection conn) {
-        Log.trace("connection-listener", "Idle: " + conn.getRemoteAddressTCP() + ", ID: " + conn.getID());
+        Log.trace("connection-listener", "Idle: " + conn.getRemoteAddressUDP() + ", ID: " + conn.getID());
     }
     
     @Override

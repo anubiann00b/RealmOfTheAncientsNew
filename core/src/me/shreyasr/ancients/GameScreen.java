@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.esotericsoftware.kryonet.Client;
@@ -102,6 +104,7 @@ public class GameScreen extends ScreenAdapter {
         viewport.apply();
         camera.update();
         batch.setProjectionMatrix(camera.combined);
+        shape.setProjectionMatrix(camera.combined);
     
         renderer.setView(camera);
         renderer.render();
@@ -130,6 +133,28 @@ public class GameScreen extends ScreenAdapter {
         font.draw(batch, "Write: " + Utils.humanReadableByteCount(serialization.getWrittenByteCount()), 8, Gdx.graphics.getHeight()-8);
     
         batch.end();
+        
+        shape.begin();
+    
+        for (GamePlayer player : gameStateToDraw.players) {
+            Rectangle rect = player.hitbox.getRect(player.pos);
+            if (player.hitbox.isBeingHit) {
+                shape.set(ShapeRenderer.ShapeType.Filled);
+                shape.setColor(Color.RED);
+            } else {
+                shape.set(ShapeRenderer.ShapeType.Line);
+                shape.setColor(Color.WHITE);
+            }
+            shape.rect(rect.x, rect.y, rect.width, rect.height);
+            
+            if (player.weaponHitbox.active) {
+                shape.set(ShapeRenderer.ShapeType.Line);
+                shape.setColor(Color.WHITE);
+                player.weaponHitbox.cs.draw(shape, player.pos);
+            }
+        }
+        
+        shape.end();
     }
     
     BitmapFont font = new BitmapFont();

@@ -20,6 +20,18 @@ public class Pos {
         return (float) Math.toDegrees(Math.atan2(y, x));
     }
     
+    public float distanceTo(Pos other) {
+        return (float) Math.sqrt(distanceSquaredTo(other));
+    }
+    
+    public float distanceSquaredTo(Pos other) {
+        return (other.x-this.x)*(other.x-this.x) + (other.y-this.y)*(other.y-this.y);
+    }
+    
+    public Pos sub(Pos other) {
+        return new Pos(x-other.x, y-other.y);
+    }
+    
     @Override
     public String toString() {
         return "Pos{" +

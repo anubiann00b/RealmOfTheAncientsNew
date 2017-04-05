@@ -1,9 +1,7 @@
 package me.shreyasr.ancients.game;
 
 import me.shreyasr.ancients.Asset;
-import me.shreyasr.ancients.component.DirectionalAnimation;
-import me.shreyasr.ancients.component.Pos;
-import me.shreyasr.ancients.component.TexTransform;
+import me.shreyasr.ancients.component.*;
 import me.shreyasr.ancients.network.InputData;
 
 public class GamePlayer {
@@ -17,29 +15,47 @@ public class GamePlayer {
     public Pos pos;
     public Pos vel = new Pos(0, 0);
     public DirectionalAnimation animation;
+    public Hitbox hitbox;
+    public WeaponHitbox weaponHitbox;
     
     public GamePlayer() { }
     
-    public GamePlayer(int id, Asset asset, Pos pos, TexTransform ttc, DirectionalAnimation animation) {
+    public GamePlayer(int id, Asset asset, Pos pos, TexTransform ttc, DirectionalAnimation animation,
+                      Hitbox hitbox, WeaponHitbox weaponHitbox) {
         this.id = id;
         this.asset = asset;
         this.pos = pos;
         this.ttc = ttc;
         this.animation = animation;
+        this.hitbox = hitbox;
+        this.weaponHitbox = weaponHitbox;
     }
     
     public GamePlayer(GamePlayer other) {
-        this(other.id, other.asset, new Pos(other.pos), new TexTransform(other.ttc), new DirectionalAnimation(other.animation));
+        this(other.id, other.asset, new Pos(other.pos), new TexTransform(other.ttc),
+                new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox));
         this.input = other.input;
     }
     
-    public void update(int deltaMillis) {
+    public void update(int deltaMillis, PlayerSet players) {
         if (input.d) vel.x = 5;
         if (input.a) vel.x = -5;
         if (input.w) vel.y = 5;
         if (input.s) vel.y = -5;
         
+        weaponHitbox.active = input.leftMouse;
+        if (input.pos != null) {
+            weaponHitbox.setAngle(input.pos.sub(pos).getDirDegrees());
+        }
+        
         animation.update(deltaMillis, vel.x != 0 || vel.y != 0, vel.getDirDegrees());
+    
+        hitbox.isBeingHit = false;
+        for (GamePlayer player : players) {
+             if (player.weaponHitbox.active && player.weaponHitbox.cs.overlaps(player.pos, hitbox.getRect(pos))) {
+                 hitbox.isBeingHit = true;
+             }
+        }
         
         pos.x += vel.x;
         pos.y += vel.y;

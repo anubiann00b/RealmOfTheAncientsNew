@@ -1,10 +1,8 @@
 package me.shreyasr.ancients.util;
 
+import com.badlogic.gdx.math.Rectangle;
 import me.shreyasr.ancients.Asset;
-import me.shreyasr.ancients.component.DirAnim;
-import me.shreyasr.ancients.component.DirectionalAnimation;
-import me.shreyasr.ancients.component.Pos;
-import me.shreyasr.ancients.component.TexTransform;
+import me.shreyasr.ancients.component.*;
 import me.shreyasr.ancients.game.GamePlayer;
 
 public class EntityFactory {
@@ -33,6 +31,8 @@ public class EntityFactory {
                                 new DirAnim.Frame(0, 48),
                                 new DirAnim.Frame(16, 48),
                                 new DirAnim.Frame(32, 48),
-                                new DirAnim.Frame(48, 48))));
+                                new DirAnim.Frame(48, 48))),
+                new Hitbox(new Rectangle(8 - 32, 8 - 32, 48, 48)),
+                new WeaponHitbox(new CircleSlice(40, 90, 60)));
     }
 }

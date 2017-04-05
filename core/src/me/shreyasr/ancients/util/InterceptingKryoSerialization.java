@@ -1,6 +1,7 @@
 package me.shreyasr.ancients.util;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.ByteBufferOutput;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.KryoSerialization;
@@ -60,19 +61,25 @@ public class InterceptingKryoSerialization extends KryoSerialization {
     
     @Override
     public synchronized Object read(Connection connection, ByteBuffer buffer) {
-        Object obj = super.read(connection, buffer);
+        try {
+            Object obj = super.read(connection, buffer);
         
-        ByteBuffer countingBuffer = buffer.duplicate(); // Makes duplicate backed by same data with it's own position
-        int byteCount = countingBuffer.position(); // Current position is at the end of the data
-        byte[] bytesWritten = new byte[byteCount];
-        countingBuffer.position(0); // Reset the position so we read from the beginning
-        countingBuffer.get(bytesWritten, 0, byteCount); // Reads byteCount bytes into bytesWritten
-    
-        Log.trace("kryointerceptor", "Read bytes: " + byteCount + ", " + obj
-                + " as " + Arrays.toString(bytesWritten).replace(", ", " "));
-    
-        readByteTimeAverage.put(byteCount);
+            ByteBuffer countingBuffer = buffer.duplicate(); // Makes duplicate backed by same data with it's own position
+            int byteCount = countingBuffer.position(); // Current position is at the end of the data
+            byte[] bytesWritten = new byte[byteCount];
+            countingBuffer.position(0); // Reset the position so we read from the beginning
+            countingBuffer.get(bytesWritten, 0, byteCount); // Reads byteCount bytes into bytesWritten
         
-        return obj;
+            Log.trace("kryointerceptor", "Read bytes: " + byteCount + ", " + obj
+                    + " as " + Arrays.toString(bytesWritten).replace(", ", " "));
+        
+            readByteTimeAverage.put(byteCount);
+            
+            return obj;
+        } catch (KryoException e) {
+            Log.error("kryo", "Error, discarding packet: " + e.getMessage());
+            buffer.position(buffer.limit());
+        }
+        return null;
     }
 }
