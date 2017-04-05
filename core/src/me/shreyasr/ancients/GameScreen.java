@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.esotericsoftware.kryonet.Client;
+import me.shreyasr.ancients.component.Attack;
 import me.shreyasr.ancients.component.Pos;
 import me.shreyasr.ancients.component.TexTransform;
 import me.shreyasr.ancients.game.GamePlayer;
@@ -26,6 +27,8 @@ import me.shreyasr.ancients.util.AccumulatingInputProcessor;
 import me.shreyasr.ancients.util.GameStateQueue;
 import me.shreyasr.ancients.util.InterceptingKryoSerialization;
 import me.shreyasr.ancients.util.Utils;
+
+import java.io.IOException;
 
 public class GameScreen extends ScreenAdapter {
     
@@ -60,6 +63,11 @@ public class GameScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(inputMultiplexer);
         renderer = new OrthogonalTiledMapRenderer(Asset.MAP.getMap(), 4f, batch);
         inputMultiplexer.addProcessor(input);
+        try {
+            client.connect(2000, "127.0.0.1", 54555, 54777);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         initialized = true;
     }
     
@@ -112,6 +120,7 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
         
         for (GamePlayer player : gameStateToDraw.players) {
+            player.currentAttack.applyFrame(player.weaponHitbox);
             TexTransform ttc = player.ttc;
             
             if (ttc.hide) return;
@@ -126,6 +135,19 @@ public class GameScreen extends ScreenAdapter {
             batch.draw(texture, player.pos.x - ttc.originX, player.pos.y - ttc.originY, ttc.originX, ttc.originY,
                     ttc.screenWidth, ttc.screenHeight, 1, 1, ttc.rotation,
                     ttc.srcX, ttc.srcY, ttc.srcWidth, ttc.srcHeight, false, false);
+            
+            Attack.AnimFrame frame = player.currentAttack.getCurrentAnimFrame();
+            if (frame != null && frame.frameNumber != -1) {
+                Texture weaponTex = frame.animation.asset.getTex();
+                weaponTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+                
+                int frameSize = frame.animation.frameSize;
+                int frameNumber = frame.frameNumber;
+                batch.setColor(Color.WHITE);
+                batch.draw(weaponTex, player.pos.x - frameSize*4/2, player.pos.y - frameSize*4/2,
+                        frameSize*4, frameSize*4,
+                        frameSize*frameNumber, 0, frameSize, frameSize, false, false);
+            }
         }
     
         InterceptingKryoSerialization serialization = ((InterceptingKryoSerialization)client.getSerialization());

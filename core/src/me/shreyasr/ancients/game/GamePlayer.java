@@ -17,11 +17,12 @@ public class GamePlayer {
     public DirectionalAnimation animation;
     public Hitbox hitbox;
     public WeaponHitbox weaponHitbox;
+    public Attack currentAttack;
     
     public GamePlayer() { }
     
     public GamePlayer(int id, Asset asset, Pos pos, TexTransform ttc, DirectionalAnimation animation,
-                      Hitbox hitbox, WeaponHitbox weaponHitbox) {
+                      Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack) {
         this.id = id;
         this.asset = asset;
         this.pos = pos;
@@ -29,11 +30,13 @@ public class GamePlayer {
         this.animation = animation;
         this.hitbox = hitbox;
         this.weaponHitbox = weaponHitbox;
+        this.currentAttack = attack;
     }
     
     public GamePlayer(GamePlayer other) {
         this(other.id, other.asset, new Pos(other.pos), new TexTransform(other.ttc),
-                new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox));
+                new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox),
+                other.currentAttack.copy());
         this.input = other.input;
     }
     
@@ -43,10 +46,7 @@ public class GamePlayer {
         if (input.w) vel.y = 5;
         if (input.s) vel.y = -5;
         
-        weaponHitbox.active = input.leftMouse;
-        if (input.pos != null) {
-            weaponHitbox.setAngle(input.pos.sub(pos).getDirDegrees());
-        }
+        currentAttack.update(deltaMillis, pos, input, weaponHitbox);
         
         animation.update(deltaMillis, vel.x != 0 || vel.y != 0, vel.getDirDegrees());
     

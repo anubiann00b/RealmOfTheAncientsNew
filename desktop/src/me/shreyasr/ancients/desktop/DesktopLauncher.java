@@ -17,7 +17,6 @@ public class DesktopLauncher {
         Log.set(Log.LEVEL_INFO);
         KryoRegistrar.register(client.getKryo());
         client.start();
-        client.connect(2000, "127.0.0.1", 54555, 54777);
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         new LwjglApplication(new AncientsGame(client), config);

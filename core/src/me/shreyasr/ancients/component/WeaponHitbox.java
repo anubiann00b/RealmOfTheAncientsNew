@@ -23,4 +23,8 @@ public class WeaponHitbox {
     public void setAngle(float angle) {
         cs.setAngle(angle);
     }
+    
+    public void setCs(CircleSlice cs) {
+        this.cs = cs;
+    }
 }

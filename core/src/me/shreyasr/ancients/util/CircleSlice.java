@@ -1,6 +1,5 @@
 package me.shreyasr.ancients.util;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import me.shreyasr.ancients.component.Pos;
@@ -96,5 +95,15 @@ public class CircleSlice {
                 pos.y + (float) Math.sin(Math.toRadians(angleStart+angleWidth)) * minRadius,
                 pos.x + (float) Math.cos(Math.toRadians(angleStart+angleWidth)) * maxRadius,
                 pos.y + (float) Math.sin(Math.toRadians(angleStart+angleWidth)) * maxRadius);
+    }
+    
+    @Override
+    public String toString() {
+        return "CircleSlice{" +
+                "angleStart=" + angleStart +
+                ", angleWidth=" + angleWidth +
+                ", minRadius=" + minRadius +
+                ", maxRadius=" + maxRadius +
+                '}';
     }
 }

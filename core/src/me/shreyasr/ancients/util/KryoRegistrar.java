@@ -5,6 +5,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.esotericsoftware.kryo.Kryo;
 import me.shreyasr.ancients.Asset;
 import me.shreyasr.ancients.component.*;
+import me.shreyasr.ancients.component.attack.InstantAttack;
+import me.shreyasr.ancients.component.attack.SwordAttack;
+import me.shreyasr.ancients.component.attack.WeaponAnimation;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.GameState;
 import me.shreyasr.ancients.game.PlayerSet;
@@ -31,6 +34,12 @@ public class KryoRegistrar {
         kryo.register(CircleSlice.class);
         kryo.register(Rectangle.class);
         kryo.register(Hitbox.class);
+        kryo.register(Attack.class);
+        kryo.register(Attack.AnimFrame.class);
+        kryo.register(Attack.AnimFrame[].class);
+        kryo.register(WeaponAnimation.class);
+        kryo.register(InstantAttack.class);
+        kryo.register(SwordAttack.class);
         kryo.register(Color.class);
         kryo.register(HashMap.class);
     }
