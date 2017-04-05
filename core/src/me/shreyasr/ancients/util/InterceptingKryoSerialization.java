@@ -77,7 +77,8 @@ public class InterceptingKryoSerialization extends KryoSerialization {
             
             return obj;
         } catch (KryoException e) {
-            Log.error("kryo", "Error, discarding packet: " + e.getMessage());
+            Log.error("kryo", "Error, discarding packet: " + e);
+            e.printStackTrace();
             buffer.position(buffer.limit());
         }
         return null;

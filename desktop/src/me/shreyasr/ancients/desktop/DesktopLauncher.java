@@ -13,7 +13,7 @@ import java.io.IOException;
 public class DesktopLauncher {
     
     public static void main (String[] arg) throws IOException {
-        Client client = new Client(8192, 2048, new InterceptingKryoSerialization());
+        Client client = new Client(8192, 4096, new InterceptingKryoSerialization(KryoRegistrar.makeKryo()));
         Log.set(Log.LEVEL_INFO);
         KryoRegistrar.register(client.getKryo());
         client.start();

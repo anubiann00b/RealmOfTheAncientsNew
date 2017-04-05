@@ -9,22 +9,26 @@ import java.util.stream.Stream;
 
 public class SwordAttack extends Attack {
     
-    private final AnimFrame[] frames;
+    private AttackDirections attackDirections;
+    private AnimFrame[] frames = new AnimFrame[0];
     private int attackTimer = -1; // -1 denotes not attacking
     
     private SwordAttack() {
-        this((AnimFrame[]) null);
+        this(null);
     }
     
-    public SwordAttack(AnimFrame... frames) {
-        this.frames = frames;
+    public SwordAttack(AttackDirections attackDirections) {
+        this.attackDirections = attackDirections;
     }
     
     @Override
     public void update(int deltaMillis, Pos pos, InputData input, WeaponHitbox weaponHitbox) {
-        if (attackTimer == -1) {
-            if (input.leftMouse) {
-                attackTimer = 0;
+        if (attackTimer == -1 && input.leftMouse) {
+            attackTimer = 0;
+            if (input.pos != null) {
+                frames = attackDirections.getFramesForMousePos(input.pos.sub(pos));
+            } else {
+                frames = new AnimFrame[0];
             }
         }
         
@@ -77,8 +81,9 @@ public class SwordAttack extends Attack {
     
     @Override
     public SwordAttack copy() {
-        SwordAttack attack = new SwordAttack(frames);
+        SwordAttack attack = new SwordAttack(attackDirections);
         attack.attackTimer = attackTimer;
+        attack.frames = frames;
         return attack;
     }
 }

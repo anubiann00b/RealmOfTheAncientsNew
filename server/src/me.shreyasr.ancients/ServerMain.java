@@ -1,6 +1,7 @@
 package me.shreyasr.ancients;
 
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.KryoSerialization;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import me.shreyasr.ancients.game.GamePlayer;
@@ -22,7 +23,7 @@ public class ServerMain {
 
         InputDataQueue inputDataQueue = new InputDataQueue();
 
-        Server server = new Server();
+        Server server = new Server(16384, 4096, new KryoSerialization(KryoRegistrar.makeKryo()));
         KryoRegistrar.register(server.getKryo());
         server.start();
     
