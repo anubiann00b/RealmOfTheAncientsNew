@@ -7,9 +7,11 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.esotericsoftware.kryonet.Client;
 import me.shreyasr.ancients.component.Pos;
@@ -20,7 +22,8 @@ import me.shreyasr.ancients.network.CustomPacketListener;
 import me.shreyasr.ancients.network.InputData;
 import me.shreyasr.ancients.util.AccumulatingInputProcessor;
 import me.shreyasr.ancients.util.GameStateQueue;
-import me.shreyasr.ancients.util.MathHelper;
+import me.shreyasr.ancients.util.InterceptingKryoSerialization;
+import me.shreyasr.ancients.util.Utils;
 
 public class GameScreen extends ScreenAdapter {
     
@@ -68,12 +71,15 @@ public class GameScreen extends ScreenAdapter {
         if (!initialized) {
             return;
         }
-    
+        Vector2 mousePosInWorld = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
         InputData inputData = new InputData(
                 input.get(Input.Keys.W),
                 input.get(Input.Keys.A),
                 input.get(Input.Keys.S),
-                input.get(Input.Keys.D));
+                input.get(Input.Keys.D),
+                new Pos(mousePosInWorld.x, mousePosInWorld.y),
+                Gdx.input.isButtonPressed(Input.Buttons.LEFT),
+                Gdx.input.isButtonPressed(Input.Buttons.RIGHT));
         client.sendUDP(inputData);
         
         GameState gameStateToDraw = gameStateQueue.getInterpolatedCurrentState(System.currentTimeMillis());
@@ -90,8 +96,8 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         camera.position.set(
-                MathHelper.clamp(viewport.getWorldWidth()/2,  playerPos.x, 3840- viewport.getWorldWidth()/2),
-                MathHelper.clamp(viewport.getWorldHeight()/2, playerPos.y, 3840- viewport.getWorldHeight() /2),
+                Utils.clamp(viewport.getWorldWidth()/2,  playerPos.x, 3840- viewport.getWorldWidth()/2),
+                Utils.clamp(viewport.getWorldHeight()/2, playerPos.y, 3840- viewport.getWorldHeight() /2),
                 0);
         viewport.apply();
         camera.update();
@@ -110,8 +116,6 @@ public class GameScreen extends ScreenAdapter {
             ttc.srcX = player.animation.getSrcX();
             ttc.srcY = player.animation.getSrcY();
     
-            System.out.println(player.animation);
-    
             Texture texture = player.asset.getTex();
             texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     
@@ -121,7 +125,12 @@ public class GameScreen extends ScreenAdapter {
                     ttc.srcX, ttc.srcY, ttc.srcWidth, ttc.srcHeight, false, false);
         }
     
+        InterceptingKryoSerialization serialization = ((InterceptingKryoSerialization)client.getSerialization());
+        font.draw(batch, "Read: " + Utils.humanReadableByteCount(serialization.getReadByteCount()), 8, Gdx.graphics.getHeight()-8-16);
+        font.draw(batch, "Write: " + Utils.humanReadableByteCount(serialization.getWrittenByteCount()), 8, Gdx.graphics.getHeight()-8);
+    
         batch.end();
     }
-
+    
+    BitmapFont font = new BitmapFont();
 }

@@ -88,7 +88,6 @@ public class DirectionalAnimation extends Animation {
             return lastDirAnim;
         } else {
             float normFacingDegrees = ((facingDegrees % 360) + 360) % 360;
-            System.out.println(normFacingDegrees);
             if (normFacingDegrees <= 45) return right;
             else if (normFacingDegrees <= 135) return up;
             else if (normFacingDegrees <= 225) return left;

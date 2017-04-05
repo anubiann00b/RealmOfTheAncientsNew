@@ -25,7 +25,7 @@ public class InputDataQueue {
         SingleClientInputDataQueue singleClientQueue = clientInputDataQueues.get(clientId);
         if (singleClientQueue == null) {
             Log.info("inputqueue", "No SingleClientQueue for client " + clientId);
-            return new InputData(false, false, false, false);
+            return new InputData(false, false, false, false, null, false, false);
         }
         return singleClientQueue.getNextInput(processTime);
     }
@@ -53,7 +53,7 @@ class SingleClientInputDataQueue {
         Map.Entry<Long, InputData> closestPastEntry = inputs.floorEntry(processTime);
         if (closestPastEntry == null) {
             Log.info("inputqueue", "No past input for client " + clientId);
-            return new InputData(false, false, false, false);
+            return new InputData(false, false, false, false, null, false, false);
         }
         return closestPastEntry.getValue();
     }

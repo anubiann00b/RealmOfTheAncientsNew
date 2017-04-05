@@ -11,10 +11,11 @@ import me.shreyasr.ancients.util.InputDataQueue;
 import me.shreyasr.ancients.util.KryoRegistrar;
 
 import java.io.IOException;
+import java.net.BindException;
 
 public class ServerMain {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Log.set(Log.LEVEL_INFO);
 
         InputDataQueue inputDataQueue = new InputDataQueue();
@@ -22,7 +23,18 @@ public class ServerMain {
         Server server = new Server();
         KryoRegistrar.register(server.getKryo());
         server.start();
-        server.bind(54555, 54777);
+    
+        try {
+            server.bind(54555, 54777);
+        } catch (BindException e) {
+            if (e.getMessage().equals("Address already in use: bind")) {
+                Log.error("server", "Port in use, failed to start");
+                server.close();
+                System.exit(0);
+            } else {
+                throw e;
+            }
+        }
 
         server.addListener(new CustomPacketListener()
                 .doOnInputData((conn, inputData) -> inputDataQueue.putInputData(conn.getID(), inputData, System.currentTimeMillis()))
