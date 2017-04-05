@@ -64,11 +64,11 @@ public class Utils {
     }
     
     // http://stackoverflow.com/a/3758880/2197700
-    public static String humanReadableByteCount(long bytes) {
-        if (bytes < 1000) return bytes + " b/s";
-        int exp = (int) (Math.log(bytes) / Math.log(1000));
+    public static String humanReadableBitCount(long bits) {
+        if (bits < 1000) return bits + " b/s";
+        int exp = (int) (Math.log(bits) / Math.log(1000));
         char pre = "KMGTPE".charAt(exp-1);
-        return String.format(Locale.US, "%.1f %sb/s", bytes / Math.pow(1000, exp), pre);
+        return String.format(Locale.US, "%.1f %sb/s", bits / Math.pow(1000, exp), pre);
     }
     
     public static float clamp(float lo, float val, float hi) {

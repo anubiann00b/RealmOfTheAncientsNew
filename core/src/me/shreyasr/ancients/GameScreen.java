@@ -151,8 +151,8 @@ public class GameScreen extends ScreenAdapter {
         }
     
         InterceptingKryoSerialization serialization = ((InterceptingKryoSerialization)client.getSerialization());
-        font.draw(batch, "Read: " + Utils.humanReadableByteCount(serialization.getReadByteCount()), 8, Gdx.graphics.getHeight()-8-16);
-        font.draw(batch, "Write: " + Utils.humanReadableByteCount(serialization.getWrittenByteCount()), 8, Gdx.graphics.getHeight()-8);
+        font.draw(batch, "Read: " + Utils.humanReadableBitCount(serialization.getReadByteCount() * 8), 8, Gdx.graphics.getHeight()-8-16);
+        font.draw(batch, "Write: " + Utils.humanReadableBitCount(serialization.getWrittenByteCount() * 8), 8, Gdx.graphics.getHeight()-8);
     
         batch.end();
         
