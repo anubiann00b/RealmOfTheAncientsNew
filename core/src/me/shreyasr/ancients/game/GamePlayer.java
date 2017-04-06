@@ -69,10 +69,16 @@ public class GamePlayer {
     @Override
     public String toString() {
         return "GamePlayer{" +
-                "id=" + id +
+                "input=" + input +
+                ", id=" + id +
                 ", asset=" + asset +
                 ", ttc=" + ttc +
                 ", pos=" + pos +
+                ", vel=" + vel +
+                ", animation=" + animation +
+                ", hitbox=" + hitbox +
+                ", weaponHitbox=" + weaponHitbox +
+                ", currentAttack=" + currentAttack +
                 '}';
     }
 }
