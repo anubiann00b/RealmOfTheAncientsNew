@@ -1,7 +1,9 @@
 package me.shreyasr.ancients.component;
 
 import com.badlogic.gdx.math.Rectangle;
+import lombok.ToString;
 
+@ToString
 public class Hitbox {
     
     public boolean isBeingHit = false;

@@ -1,7 +1,9 @@
 package me.shreyasr.ancients.component;
 
 import com.badlogic.gdx.graphics.Color;
+import lombok.ToString;
 
+@ToString
 public class TexTransform {
 
     public int screenWidth;

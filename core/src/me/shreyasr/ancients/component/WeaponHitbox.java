@@ -1,7 +1,9 @@
 package me.shreyasr.ancients.component;
 
+import lombok.ToString;
 import me.shreyasr.ancients.util.CircleSlice;
 
+@ToString
 public class WeaponHitbox {
     
     public boolean active = false;

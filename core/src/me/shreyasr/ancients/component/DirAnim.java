@@ -1,9 +1,12 @@
 package me.shreyasr.ancients.component;
 
+import lombok.ToString;
+
+@ToString(includeFieldNames = false)
 public class DirAnim {
     
-    public Frame[] frames;
     public int standingFrame;
+    public Frame[] frames;
     
     protected DirAnim() { }
 
@@ -11,7 +14,8 @@ public class DirAnim {
         this.standingFrame = standingFrame;
         this.frames = frames;
     }
-
+    
+    @ToString
     public static class Frame {
         
         public int srcX;

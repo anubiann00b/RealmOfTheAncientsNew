@@ -1,5 +1,8 @@
 package me.shreyasr.ancients.game;
 
+import lombok.ToString;
+
+@ToString(includeFieldNames = false)
 public class GameState implements Comparable<GameState> {
     
     public static GameState makeEmptyGameStateWithTime(long time) {
@@ -56,13 +59,5 @@ public class GameState implements Comparable<GameState> {
     @Override
     public int compareTo(GameState o) {
         return Long.compare(time, o.time);
-    }
-    
-    @Override
-    public String toString() {
-        return "GameState{" +
-                "time=" + time +
-                ", players=" + players +
-                '}';
     }
 }

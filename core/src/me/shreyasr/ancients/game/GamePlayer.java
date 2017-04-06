@@ -1,23 +1,25 @@
 package me.shreyasr.ancients.game;
 
+import lombok.ToString;
 import me.shreyasr.ancients.Asset;
 import me.shreyasr.ancients.component.*;
 import me.shreyasr.ancients.network.InputData;
 
+@ToString(includeFieldNames = false, exclude = { "asset" })
 public class GamePlayer {
-    
-    public transient InputData input;
     
     public int id;
     
+    public transient InputData input;
+    
     public Asset asset;
-    public TexTransform ttc;
     public Pos pos;
     public Pos vel = new Pos(0, 0);
     public DirectionalAnimation animation;
     public Hitbox hitbox;
     public WeaponHitbox weaponHitbox;
     public Attack currentAttack;
+    public TexTransform ttc;
     
     public GamePlayer() { }
     
@@ -64,21 +66,5 @@ public class GamePlayer {
     public void interpolateTo(GamePlayer nextPlayer, float percentageToNext) {
         pos.x = pos.x * (1 - percentageToNext) + nextPlayer.pos.x * percentageToNext;
         pos.y = pos.y * (1 - percentageToNext) + nextPlayer.pos.y * percentageToNext;
-    }
-    
-    @Override
-    public String toString() {
-        return "GamePlayer{" +
-                "input=" + input +
-                ", id=" + id +
-                ", asset=" + asset +
-                ", ttc=" + ttc +
-                ", pos=" + pos +
-                ", vel=" + vel +
-                ", animation=" + animation +
-                ", hitbox=" + hitbox +
-                ", weaponHitbox=" + weaponHitbox +
-                ", currentAttack=" + currentAttack +
-                '}';
     }
 }

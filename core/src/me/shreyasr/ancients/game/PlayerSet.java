@@ -1,9 +1,12 @@
 package me.shreyasr.ancients.game;
 
+import lombok.ToString;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@ToString(includeFieldNames = false)
 public class PlayerSet implements Iterable<GamePlayer> {
     
     private final Map<Integer, GamePlayer> players;
@@ -38,13 +41,6 @@ public class PlayerSet implements Iterable<GamePlayer> {
     
     public Iterator<GamePlayer> iterator() {
         return players.values().iterator();
-    }
-    
-    @Override
-    public String toString() {
-        return "PlayerSet{" +
-                "players=" + players +
-                '}';
     }
 }
 

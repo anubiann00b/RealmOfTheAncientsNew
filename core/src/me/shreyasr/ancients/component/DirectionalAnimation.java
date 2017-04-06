@@ -1,5 +1,8 @@
 package me.shreyasr.ancients.component;
 
+import lombok.ToString;
+
+@ToString
 public class DirectionalAnimation extends Animation {
     
     @Override public boolean getFlipX() { return flipX; }
@@ -94,17 +97,5 @@ public class DirectionalAnimation extends Animation {
             else if (normFacingDegrees <= 315) return down;
             else return right; // normFacingDegrees > 315
         }
-    }
-    
-    @Override
-    public String toString() {
-        return "DirectionalAnimation{" +
-                "srcX=" + srcX +
-                ", srcY=" + srcY +
-                ", flipX=" + flipX +
-                ", flipY=" + flipY +
-                ", millisInFrame=" + millisInFrame +
-                ", currentFrameIndex=" + currentFrameIndex +
-                '}';
     }
 }

@@ -1,5 +1,6 @@
 package me.shreyasr.ancients.component;
 
+import lombok.ToString;
 import me.shreyasr.ancients.component.attack.WeaponAnimation;
 import me.shreyasr.ancients.network.InputData;
 import me.shreyasr.ancients.util.CircleSlice;
@@ -11,6 +12,7 @@ public abstract class Attack {
     public abstract void applyFrame(WeaponHitbox weaponHitbox);
     public abstract AnimFrame getCurrentAnimFrame();
     
+    @ToString
     public static class AnimFrame {
         
         public final WeaponAnimation animation;
@@ -29,17 +31,6 @@ public abstract class Attack {
             this.duration = duration;
             this.hitbox = hitbox;
             this.hitboxAngle = hitboxAngle;
-        }
-    
-        @Override
-        public String toString() {
-            return "AnimFrame{" +
-                    "animation=" + animation +
-                    ", frameNumber=" + frameNumber +
-                    ", duration=" + duration +
-                    ", hitbox=" + hitbox +
-                    ", hitboxAngle=" + hitboxAngle +
-                    '}';
         }
     }
 }

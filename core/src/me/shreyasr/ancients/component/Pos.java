@@ -4,7 +4,9 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import lombok.ToString;
 
+@ToString
 public class Pos implements KryoSerializable {
     
     @Override
@@ -47,13 +49,5 @@ public class Pos implements KryoSerializable {
     
     public Pos sub(Pos other) {
         return new Pos(x-other.x, y-other.y);
-    }
-    
-    @Override
-    public String toString() {
-        return "Pos{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
     }
 }

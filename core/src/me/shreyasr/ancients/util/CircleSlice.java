@@ -2,17 +2,19 @@ package me.shreyasr.ancients.util;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import lombok.ToString;
 import me.shreyasr.ancients.component.Pos;
 
 import java.util.stream.Stream;
 
+@ToString
 public class CircleSlice {
+    
+    private float angleStart;
     
     public final float minRadius;
     public final float maxRadius;
     public final float angleWidth;
-    
-    private float angleStart;
     
     protected CircleSlice() {
         this(0, 0, 0);
@@ -95,15 +97,5 @@ public class CircleSlice {
                 pos.y + (float) Math.sin(Math.toRadians(angleStart+angleWidth)) * minRadius,
                 pos.x + (float) Math.cos(Math.toRadians(angleStart+angleWidth)) * maxRadius,
                 pos.y + (float) Math.sin(Math.toRadians(angleStart+angleWidth)) * maxRadius);
-    }
-    
-    @Override
-    public String toString() {
-        return "CircleSlice{" +
-                "angleStart=" + angleStart +
-                ", angleWidth=" + angleWidth +
-                ", minRadius=" + minRadius +
-                ", maxRadius=" + maxRadius +
-                '}';
     }
 }

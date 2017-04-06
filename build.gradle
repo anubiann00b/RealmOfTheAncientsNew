@@ -89,6 +89,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.kotcrab.vis:vis-ui:1.2.4"
         compile "com.github.anubiann00b:kryonet:6108b3b5"
+        compile "org.projectlombok:lombok:1.16.16"
     }
 }
 
