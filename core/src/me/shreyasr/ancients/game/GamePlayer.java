@@ -10,7 +10,13 @@ public class GamePlayer {
     
     public int id;
     
-    public transient InputData input;
+    public transient PlayerData data;
+    
+    public void setPlayerData(PlayerData data) {
+        this.data = data;
+    }
+    
+    public InputData input;
     
     public Asset asset;
     public Pos pos;
@@ -23,7 +29,7 @@ public class GamePlayer {
     
     public GamePlayer() { }
     
-    public GamePlayer(int id, Asset asset, Pos pos, TexTransform ttc, DirectionalAnimation animation,
+    public GamePlayer(int id, PlayerData data, Asset asset, Pos pos, TexTransform ttc, DirectionalAnimation animation,
                       Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack) {
         this.id = id;
         this.asset = asset;
@@ -33,10 +39,11 @@ public class GamePlayer {
         this.hitbox = hitbox;
         this.weaponHitbox = weaponHitbox;
         this.currentAttack = attack;
+        this.setPlayerData(data);
     }
     
     public GamePlayer(GamePlayer other) {
-        this(other.id, other.asset, new Pos(other.pos), new TexTransform(other.ttc),
+        this(other.id, other.data, other.asset, new Pos(other.pos), new TexTransform(other.ttc),
                 new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox),
                 other.currentAttack.copy());
         this.input = other.input;
@@ -54,7 +61,7 @@ public class GamePlayer {
     
         hitbox.isBeingHit = false;
         for (GamePlayer player : players) {
-             if (player.weaponHitbox.active && player.weaponHitbox.cs.overlaps(player.pos, hitbox.getRect(pos))) {
+             if (player.weaponHitbox.active && player.weaponHitbox.cs.overlaps(player.pos, hitbox.getRect(data, pos))) {
                  hitbox.isBeingHit = true;
              }
         }

@@ -55,7 +55,9 @@ public class GameScreen extends ScreenAdapter {
         this.client = client;
         client.addListener(new CustomPacketListener()
                 .doOnConnect(conn -> id = conn.getID())
-                .doOnGameState((conn, gameState) -> gameStateQueue.put(gameState)));
+                .doOnGameState((conn, gameState) -> gameStateQueue.put(gameState))
+                .doOnPlayerData((conn, playerData) -> gameStateQueue.put(conn.getID(), playerData))
+        );
     }
 
     @Override
@@ -159,15 +161,17 @@ public class GameScreen extends ScreenAdapter {
         shape.begin();
     
         for (GamePlayer player : gameStateToDraw.players) {
-            Rectangle rect = player.hitbox.getRect(player.pos);
-            if (player.hitbox.isBeingHit) {
-                shape.set(ShapeRenderer.ShapeType.Filled);
-                shape.setColor(Color.RED);
-            } else {
-                shape.set(ShapeRenderer.ShapeType.Line);
-                shape.setColor(Color.WHITE);
+            if (player.data != null) {
+                Rectangle rect = player.hitbox.getRect(player.data, player.pos);
+                if (player.hitbox.isBeingHit) {
+                    shape.set(ShapeRenderer.ShapeType.Filled);
+                    shape.setColor(Color.RED);
+                } else {
+                    shape.set(ShapeRenderer.ShapeType.Line);
+                    shape.setColor(Color.WHITE);
+                }
+                shape.rect(rect.x, rect.y, rect.width, rect.height);
             }
-            shape.rect(rect.x, rect.y, rect.width, rect.height);
             
             if (player.weaponHitbox.active) {
                 shape.set(ShapeRenderer.ShapeType.Line);

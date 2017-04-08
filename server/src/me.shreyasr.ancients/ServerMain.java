@@ -40,12 +40,18 @@ public class ServerMain {
         }
     
         List<Integer> idsToRemove = new ArrayList<>();
+    
+        final long[] timeDisconnected = {0};
 
         server.addListener(new CustomPacketListener()
-                .doOnInputData((conn, inputData) -> inputDataQueue.putInputData(conn.getID(), inputData, System.currentTimeMillis()))
+                .doOnInputData((conn, inputData) -> {
+                    inputDataQueue.putInputData(conn.getID(), inputData, System.currentTimeMillis());
+                    timeDisconnected[0] = 0;
+                })
                 .doOnDisconnect(conn -> { synchronized (idsToRemove) { idsToRemove.add(conn.getID()); } }));
         
         GameState currentGameState = new GameState(System.currentTimeMillis() - 16);
+        
         
         while(true) {
             long processTime = System.currentTimeMillis();
@@ -66,6 +72,7 @@ public class ServerMain {
                     if (player == null) {
                         player = EntityFactory.createGamePlayer(id);
                         currentGameState.players.put(id, player);
+                        server.sendToAllTCP(player.data);
                     }
                 }
             }
@@ -78,6 +85,12 @@ public class ServerMain {
             currentGameState.update(16);
             
             server.sendToAllUDP(currentGameState);
+    
+            timeDisconnected[0] += 16;
+            if (timeDisconnected[0] > 15000) {
+                server.close();
+                System.exit(0);
+            }
             
             try {
                 Thread.sleep(16);

@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.minlog.Log;
 import me.shreyasr.ancients.game.GameState;
+import me.shreyasr.ancients.game.PlayerData;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -14,6 +15,7 @@ public class CustomPacketListener implements Listener {
     private Consumer<Connection> doOnDisconnect = c -> {};
     private BiConsumer<Connection, InputData> inputDataConsumer = (c, p) -> {};
     private BiConsumer<Connection, GameState> gameStateConsumer = (c, p) -> {};
+    private BiConsumer<Connection, PlayerData> playerDataConsumer = (c, p) -> {};
     
     public CustomPacketListener doOnConnect(Consumer<Connection> doOnConnect) {
         this.doOnConnect = doOnConnect;
@@ -32,6 +34,11 @@ public class CustomPacketListener implements Listener {
     
     public CustomPacketListener doOnGameState(BiConsumer<Connection, GameState> gameStateConsumer) {
         this.gameStateConsumer = gameStateConsumer;
+        return this;
+    }
+    
+    public CustomPacketListener doOnPlayerData(BiConsumer<Connection, PlayerData> playerDataConsumer) {
+        this.playerDataConsumer = playerDataConsumer;
         return this;
     }
     
@@ -60,6 +67,9 @@ public class CustomPacketListener implements Listener {
         }
         if (gameStateConsumer != null && object instanceof GameState) {
             gameStateConsumer.accept(conn, (GameState) object);
+        }
+        if (playerDataConsumer != null && object instanceof PlayerData) {
+            playerDataConsumer.accept(conn, (PlayerData) object);
         }
     }
 }

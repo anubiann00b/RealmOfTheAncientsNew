@@ -7,6 +7,7 @@ import me.shreyasr.ancients.component.attack.AttackDirections;
 import me.shreyasr.ancients.component.attack.SwordAttack;
 import me.shreyasr.ancients.component.attack.WeaponAnimation;
 import me.shreyasr.ancients.game.GamePlayer;
+import me.shreyasr.ancients.game.PlayerData;
 
 import java.io.Serializable;
 import java.util.function.Predicate;
@@ -15,7 +16,9 @@ public class EntityFactory {
     
     public static GamePlayer createGamePlayer(int id) {
         CircleSlice swordHitbox = new CircleSlice(40, 90, 45);
-        return new GamePlayer(id, Asset.PLAYER,
+        return new GamePlayer(id,
+                new PlayerData(id, new Rectangle(8 - 32, 8 - 32, 48, 48)),
+                Asset.PLAYER,
                 new Pos(100, 100),
                 new TexTransform(16, 16, 4),
                 new DirectionalAnimation(200,
@@ -39,7 +42,7 @@ public class EntityFactory {
                                 new DirAnim.Frame(16, 48),
                                 new DirAnim.Frame(32, 48),
                                 new DirAnim.Frame(48, 48))),
-                new Hitbox(new Rectangle(8 - 32, 8 - 32, 48, 48)),
+                new Hitbox(),
                 new WeaponHitbox(new CircleSlice(40, 90, 60)),
                 new SwordAttack(new AttackDirections(
                         new AttackDirections.AttackDirection((Predicate<Pos> & Serializable)mousePos -> mousePos.x >= 0 && mousePos.y >= 0,

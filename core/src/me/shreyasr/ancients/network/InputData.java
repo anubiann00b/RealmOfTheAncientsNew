@@ -20,7 +20,7 @@ public class InputData implements KryoSerializable {
         bits.set(4, leftMouse);
         bits.set(5, rightMouse);
         output.writeByte(bits.isEmpty() ? 0 : bits.toByteArray()[0]);
-        kryo.writeObject(output, pos);
+        kryo.writeObjectOrNull(output, pos, Pos.class);
     }
     
     @Override
@@ -33,8 +33,7 @@ public class InputData implements KryoSerializable {
         d = bits.get(3);
         leftMouse = bits.get(4);
         rightMouse = bits.get(5);
-        pos = kryo.readObject(input, Pos.class);
-        System.out.println(this);
+        pos = kryo.readObjectOrNull(input, Pos.class);
     }
 
     public boolean w;

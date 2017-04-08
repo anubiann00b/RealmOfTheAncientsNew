@@ -49,7 +49,7 @@ public class InterceptingKryoSerialization extends KryoSerialization {
         countingBuffer.position(0);
         countingBuffer.get(bytesWritten, 0, byteCount);
     
-        Log.trace("kryointerceptor", "Wrote bytes: " + byteCount + ", " + object
+        Log.debug("kryointerceptor", "Wrote bytes: " + byteCount + ", " + object
                 + " as " + Arrays.toString(bytesWritten).replace(", ", " "));
     
         writtenByteTimeAverage.put(byteCount);
@@ -70,7 +70,7 @@ public class InterceptingKryoSerialization extends KryoSerialization {
             countingBuffer.position(0); // Reset the position so we read from the beginning
             countingBuffer.get(bytesWritten, 0, byteCount); // Reads byteCount bytes into bytesWritten
         
-            Log.trace("kryointerceptor", "Read bytes: " + byteCount + ", " + obj
+            Log.debug("kryointerceptor", "Read bytes: " + byteCount + ", " + obj
                     + " as " + Arrays.toString(bytesWritten).replace(", ", " "));
         
             readByteTimeAverage.put(byteCount);

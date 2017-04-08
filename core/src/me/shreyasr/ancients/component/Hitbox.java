@@ -2,27 +2,24 @@ package me.shreyasr.ancients.component;
 
 import com.badlogic.gdx.math.Rectangle;
 import lombok.ToString;
+import me.shreyasr.ancients.game.PlayerData;
 
 @ToString
 public class Hitbox {
     
     public boolean isBeingHit = false;
-    protected final Rectangle rect;
     
-    protected Hitbox() {
-        this((Rectangle) null);
-    }
-    
-    public Hitbox(Rectangle rect) {
-        this.rect = rect;
+    public Hitbox() {
+        
     }
     
     public Hitbox(Hitbox hitbox) {
-        this(new Rectangle(hitbox.rect));
+        this();
         isBeingHit = hitbox.isBeingHit;
     }
     
-    public Rectangle getRect(Pos pos) {
+    public Rectangle getRect(PlayerData data, Pos pos) {
+        Rectangle rect = data.hitboxRect;
         return new Rectangle(rect).setPosition(pos.x + rect.x, pos.y + rect.y);
     }
 }

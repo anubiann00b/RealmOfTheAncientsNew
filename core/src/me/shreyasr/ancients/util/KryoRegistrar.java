@@ -12,6 +12,7 @@ import me.shreyasr.ancients.component.attack.SwordAttack;
 import me.shreyasr.ancients.component.attack.WeaponAnimation;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.GameState;
+import me.shreyasr.ancients.game.PlayerData;
 import me.shreyasr.ancients.game.PlayerSet;
 import me.shreyasr.ancients.network.InputData;
 import org.objenesis.strategy.StdInstantiatorStrategy;
@@ -45,6 +46,7 @@ public class KryoRegistrar {
         kryo.register(GameState.class);
         kryo.register(PlayerSet.class);
         kryo.register(GamePlayer.class);
+        kryo.register(PlayerData.class);
         kryo.register(Asset.class);
         kryo.register(TexTransform.class);
         kryo.register(Pos.class);
