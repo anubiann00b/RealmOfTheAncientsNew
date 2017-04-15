@@ -9,9 +9,7 @@ public class Hitbox {
     
     public boolean isBeingHit = false;
     
-    public Hitbox() {
-        
-    }
+    public Hitbox() { }
     
     public Hitbox(Hitbox hitbox) {
         this();

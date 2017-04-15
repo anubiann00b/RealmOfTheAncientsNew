@@ -11,30 +11,29 @@ public class DirectionalAnimation extends Animation {
         RIGHT, UP, LEFT, DOWN
     }
     
-    @Override public boolean getFlipX() { return flipX; }
-    @Override public boolean getFlipY() { return flipY; }
-    @Override public int getSrcX() { return srcX; }
-    @Override public int getSrcY() { return srcY; }
+    @Override public boolean getFlipX(PlayerData playerData) { return getCurrentFrame(playerData).flipX; }
+    @Override public boolean getFlipY(PlayerData playerData) { return getCurrentFrame(playerData).flipY; }
+    @Override public int getSrcX(PlayerData playerData) { return getCurrentFrame(playerData).srcX; }
+    @Override public int getSrcY(PlayerData playerData) { return getCurrentFrame(playerData).srcY; }
     
-    private int srcX;
-    private int srcY;
-    private boolean flipX;
-    private boolean flipY;
+    private DirAnim.Frame getCurrentFrame(PlayerData playerData) {
+        DirAnim dirAnim = getDirAnim(playerData, lastDir);
+        return dirAnim.frames[renderFrame];
+    }
     
     private Direction lastDir;
     
     private int millisInFrame = -1;
-    private int currentFrameIndex = 0;
+    private int renderFrame;
+    
+    private transient int currentFrameIndex = 0;
     
     public DirectionalAnimation(DirectionalAnimation anim) {
         this();
         this.lastDir = anim.lastDir;
         this.millisInFrame = anim.millisInFrame;
+        this.renderFrame = anim.renderFrame;
         this.currentFrameIndex = anim.currentFrameIndex;
-        this.srcX = anim.srcX;
-        this.srcY = anim.srcY;
-        this.flipX = anim.flipX;
-        this.flipY = anim.flipY;
     }
     
     public DirectionalAnimation() {
@@ -48,9 +47,6 @@ public class DirectionalAnimation extends Animation {
         lastDir = dir;
         
         if (moving || millisInFrame != -1) {
-//            if (currentFrameIndex == dirAnim.standingFrame) {
-//                currentFrameIndex = 0;
-//            }
             millisInFrame += deltaMillis;
         }
         
@@ -67,18 +63,11 @@ public class DirectionalAnimation extends Animation {
             currentFrameIndex = 0;
         }
         
-        int renderFrame;
         if (!moving && millisInFrame == -1) {
             renderFrame = dirAnim.standingFrame;
         } else {
             renderFrame = currentFrameIndex;
         }
-    
-        DirAnim.Frame currentFrame = dirAnim.frames[renderFrame];
-        srcX = currentFrame.srcX;
-        srcY = currentFrame.srcY;
-        flipX = currentFrame.flipX;
-        flipY = currentFrame.flipY;
     }
     
     private Direction getDir(boolean moving, float facingDegrees) {
@@ -101,7 +90,7 @@ public class DirectionalAnimation extends Animation {
             case LEFT: return playerData.left;
             case DOWN: return playerData.down;
         }
-        Log.error("directionalanimation", "Switch on Direction enum fell through");
-        return null;
+        Log.error("directionalanimation", "Switch on Direction enum fell through: " + dir + " " + playerData);
+        throw new RuntimeException("Switch on Direction enum fell through: " + dir + " " + playerData);
     }
 }

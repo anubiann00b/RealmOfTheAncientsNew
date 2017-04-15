@@ -2,33 +2,59 @@ package me.shreyasr.ancients.util;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.esotericsoftware.kryo.DefaultSerializer;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import lombok.ToString;
 import me.shreyasr.ancients.component.Pos;
 
 import java.util.stream.Stream;
 
 @ToString
+@DefaultSerializer(CircleSlice.CircleSliceSerializer.class)
 public class CircleSlice {
+    
+    public static class CircleSliceSerializer extends Serializer<CircleSlice> {
+    
+        @Override
+        public void write(Kryo kryo, Output output, CircleSlice cs) {
+            output.writeInt(cs.minRadius, true);
+            output.writeInt(cs.maxRadius, true);
+            output.writeInt(cs.angleWidth, true);
+            output.writeFloat(cs.angleStart, 8, true);
+        }
+    
+        @Override
+        public CircleSlice read(Kryo kryo, Input input, Class<CircleSlice> type) {
+            int minRadius = input.readInt(true);
+            int maxRadius = input.readInt(true);
+            int angleWidth = input.readInt(true);
+            float angleStart = input.readFloat(8, true);
+            return new CircleSlice(minRadius, maxRadius, angleWidth, angleStart);
+        }
+    }
     
     private float angleStart;
     
-    public final float minRadius;
-    public final float maxRadius;
-    public final float angleWidth;
+    public final int minRadius;
+    public final int maxRadius;
+    public final int angleWidth;
     
-    protected CircleSlice() {
-        this(0, 0, 0);
+    public CircleSlice(int minRadius, int maxRadius, int angleWidth) {
+        this(minRadius, maxRadius, angleWidth, 0);
     }
     
-    public CircleSlice(float minRadius, float maxRadius, float angleWidth) {
+    public CircleSlice(int minRadius, int maxRadius, int angleWidth, float angleStart) {
         this.minRadius = minRadius;
         this.maxRadius = maxRadius;
         this.angleWidth = angleWidth;
+        this.angleStart = angleStart;
     }
     
     public CircleSlice(CircleSlice cs) {
-        this(cs.minRadius, cs.maxRadius, cs.angleWidth);
-        angleStart = cs.angleStart;
+        this(cs.minRadius, cs.maxRadius, cs.angleWidth, cs.angleStart);
     }
     
     public void setAngle(float angle) {

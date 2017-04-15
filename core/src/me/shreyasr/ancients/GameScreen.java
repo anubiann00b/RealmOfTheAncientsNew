@@ -129,8 +129,8 @@ public class GameScreen extends ScreenAdapter {
     
                 if (ttc.hide) return;
     
-                ttc.srcX = player.animation.getSrcX();
-                ttc.srcY = player.animation.getSrcY();
+                ttc.srcX = player.animation.getSrcX(player.data);
+                ttc.srcY = player.animation.getSrcY(player.data);
     
                 Texture texture = player.data.asset.getTex();
                 texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
