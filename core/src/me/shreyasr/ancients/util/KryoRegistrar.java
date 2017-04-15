@@ -52,6 +52,7 @@ public class KryoRegistrar {
         kryo.register(Pos.class);
         kryo.register(Animation.class);
         kryo.register(DirectionalAnimation.class);
+        kryo.register(DirectionalAnimation.Direction.class);
         kryo.register(DirAnim.class);
         kryo.register(DirAnim.Frame.class);
         kryo.register(DirAnim.Frame[].class);

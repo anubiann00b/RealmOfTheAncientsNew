@@ -1,9 +1,15 @@
 package me.shreyasr.ancients.component;
 
+import com.esotericsoftware.minlog.Log;
 import lombok.ToString;
+import me.shreyasr.ancients.game.PlayerData;
 
 @ToString
 public class DirectionalAnimation extends Animation {
+    
+    public enum Direction {
+        RIGHT, UP, LEFT, DOWN
+    }
     
     @Override public boolean getFlipX() { return flipX; }
     @Override public boolean getFlipY() { return flipY; }
@@ -14,22 +20,15 @@ public class DirectionalAnimation extends Animation {
     private int srcY;
     private boolean flipX;
     private boolean flipY;
-    private int frameTimeMillis;
     
-    private DirAnim up;
-    private DirAnim right;
-    private DirAnim left;
-    private DirAnim down;
-    private DirAnim lastDirAnim;
+    private Direction lastDir;
     
     private int millisInFrame = -1;
     private int currentFrameIndex = 0;
     
-    protected DirectionalAnimation() { }
-    
     public DirectionalAnimation(DirectionalAnimation anim) {
-        this(anim.frameTimeMillis, anim.up, anim.right, anim.left, anim.down);
-        this.lastDirAnim = anim.lastDirAnim;
+        this();
+        this.lastDir = anim.lastDir;
         this.millisInFrame = anim.millisInFrame;
         this.currentFrameIndex = anim.currentFrameIndex;
         this.srcX = anim.srcX;
@@ -38,19 +37,15 @@ public class DirectionalAnimation extends Animation {
         this.flipY = anim.flipY;
     }
     
-    public DirectionalAnimation(int frameTimeMillis, DirAnim up, DirAnim right, DirAnim left, DirAnim down) {
-        this.frameTimeMillis = frameTimeMillis;
-        this.up = up;
-        this.right = right;
-        this.left = left;
-        this.down = down;
-        this.lastDirAnim = down;
+    public DirectionalAnimation() {
+        this.lastDir = Direction.DOWN;
     }
     
     @Override
-    public void update(int deltaMillis, boolean moving, float facingDegrees) {
-        DirAnim dirAnim = getDirAnim(moving, facingDegrees);
-        lastDirAnim = dirAnim;
+    public void update(PlayerData playerData, int deltaMillis, boolean moving, float facingDegrees) {
+        Direction dir = getDir(moving, facingDegrees);
+        DirAnim dirAnim = getDirAnim(playerData, dir);
+        lastDir = dir;
         
         if (moving || millisInFrame != -1) {
 //            if (currentFrameIndex == dirAnim.standingFrame) {
@@ -59,7 +54,7 @@ public class DirectionalAnimation extends Animation {
             millisInFrame += deltaMillis;
         }
         
-        if (millisInFrame > frameTimeMillis) {
+        if (millisInFrame > playerData.animFrameTimeMillis) {
             millisInFrame = -1;
             if (moving) {
                 currentFrameIndex += 1;
@@ -86,16 +81,27 @@ public class DirectionalAnimation extends Animation {
         flipY = currentFrame.flipY;
     }
     
-    private DirAnim getDirAnim(boolean moving, float facingDegrees) {
+    private Direction getDir(boolean moving, float facingDegrees) {
         if (!moving) {
-            return lastDirAnim;
+            return lastDir;
         } else {
             float normFacingDegrees = ((facingDegrees % 360) + 360) % 360;
-            if (normFacingDegrees <= 45) return right;
-            else if (normFacingDegrees <= 135) return up;
-            else if (normFacingDegrees <= 225) return left;
-            else if (normFacingDegrees <= 315) return down;
-            else return right; // normFacingDegrees > 315
+            if (normFacingDegrees <= 45) return Direction.RIGHT;
+            else if (normFacingDegrees <= 135) return Direction.UP;
+            else if (normFacingDegrees <= 225) return Direction.LEFT;
+            else if (normFacingDegrees <= 315) return Direction.DOWN;
+            else return Direction.RIGHT; // normFacingDegrees > 315
         }
+    }
+    
+    private DirAnim getDirAnim(PlayerData playerData, Direction dir) {
+        switch (dir) {
+            case RIGHT: return playerData.right;
+            case UP: return playerData.up;
+            case LEFT: return playerData.left;
+            case DOWN: return playerData.down;
+        }
+        Log.error("directionalanimation", "Switch on Direction enum fell through");
+        return null;
     }
 }

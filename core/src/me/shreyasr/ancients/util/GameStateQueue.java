@@ -1,5 +1,6 @@
 package me.shreyasr.ancients.util;
 
+import com.esotericsoftware.minlog.Log;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.GameState;
 import me.shreyasr.ancients.game.PlayerData;
@@ -50,7 +51,10 @@ public class GameStateQueue {
     private void addPlayerDataToPlayers(GameState state) {
         for (GamePlayer player : state.players) {
             if (player.data == null) {
-                player.setPlayerData(pendingPlayerData.get(player.id));
+                PlayerData data = pendingPlayerData.get(player.id);
+                if (data != null) {
+                    player.setPlayerData(data);
+                }
             }
         }
     }

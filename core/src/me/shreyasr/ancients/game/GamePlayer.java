@@ -1,11 +1,10 @@
 package me.shreyasr.ancients.game;
 
 import lombok.ToString;
-import me.shreyasr.ancients.Asset;
 import me.shreyasr.ancients.component.*;
 import me.shreyasr.ancients.network.InputData;
 
-@ToString(includeFieldNames = false, exclude = { "asset" })
+@ToString(includeFieldNames = false, exclude = { "data" })
 public class GamePlayer {
     
     public int id;
@@ -18,7 +17,6 @@ public class GamePlayer {
     
     public InputData input;
     
-    public Asset asset;
     public Pos pos;
     public Pos vel = new Pos(0, 0);
     public DirectionalAnimation animation;
@@ -29,10 +27,9 @@ public class GamePlayer {
     
     public GamePlayer() { }
     
-    public GamePlayer(int id, PlayerData data, Asset asset, Pos pos, TexTransform ttc, DirectionalAnimation animation,
+    public GamePlayer(int id, PlayerData data, Pos pos, TexTransform ttc, DirectionalAnimation animation,
                       Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack) {
         this.id = id;
-        this.asset = asset;
         this.pos = pos;
         this.ttc = ttc;
         this.animation = animation;
@@ -43,7 +40,7 @@ public class GamePlayer {
     }
     
     public GamePlayer(GamePlayer other) {
-        this(other.id, other.data, other.asset, new Pos(other.pos), new TexTransform(other.ttc),
+        this(other.id, other.data, new Pos(other.pos), new TexTransform(other.ttc),
                 new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox),
                 other.currentAttack.copy());
         this.input = other.input;
@@ -55,9 +52,9 @@ public class GamePlayer {
         if (input.w) vel.y = 5;
         if (input.s) vel.y = -5;
         
-        currentAttack.update(deltaMillis, pos, input, weaponHitbox);
+        currentAttack.update(data, deltaMillis, pos, input, weaponHitbox);
         
-        animation.update(deltaMillis, vel.x != 0 || vel.y != 0, vel.getDirDegrees());
+        animation.update(data, deltaMillis, vel.x != 0 || vel.y != 0, vel.getDirDegrees());
     
         hitbox.isBeingHit = false;
         for (GamePlayer player : players) {

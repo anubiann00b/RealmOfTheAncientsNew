@@ -15,13 +15,17 @@ import java.io.IOException;
 import java.net.BindException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class ServerMain {
+    
+    private static GameState currentGameState = new GameState(System.currentTimeMillis() - 16);
+    private static int timeDisconnected = 0;
+    private static InputDataQueue inputDataQueue = new InputDataQueue();
+    private static final List<Integer> idsToRemove = new ArrayList<>();
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Log.set(Log.LEVEL_INFO);
-
-        InputDataQueue inputDataQueue = new InputDataQueue();
 
         Server server = new Server(16384, 4096, new KryoSerialization(KryoRegistrar.makeKryo()));
         KryoRegistrar.register(server.getKryo());
@@ -39,19 +43,18 @@ public class ServerMain {
             }
         }
     
-        List<Integer> idsToRemove = new ArrayList<>();
-    
-        final long[] timeDisconnected = {0};
-
         server.addListener(new CustomPacketListener()
+                .doOnConnect(conn -> {
+                    GameState state = currentGameState;
+                    StreamSupport.stream(state.players.spliterator(), false)
+                            .map(player -> player.data)
+                            .forEach(conn::sendTCP);
+                })
                 .doOnInputData((conn, inputData) -> {
                     inputDataQueue.putInputData(conn.getID(), inputData, System.currentTimeMillis());
-                    timeDisconnected[0] = 0;
+                    timeDisconnected = 0;
                 })
                 .doOnDisconnect(conn -> { synchronized (idsToRemove) { idsToRemove.add(conn.getID()); } }));
-        
-        GameState currentGameState = new GameState(System.currentTimeMillis() - 16);
-        
         
         while(true) {
             long processTime = System.currentTimeMillis();
@@ -86,8 +89,8 @@ public class ServerMain {
             
             server.sendToAllUDP(currentGameState);
     
-            timeDisconnected[0] += 16;
-            if (timeDisconnected[0] > 15000) {
+            timeDisconnected += 16;
+            if (timeDisconnected > 15000) {
                 server.close();
                 System.exit(0);
             }
