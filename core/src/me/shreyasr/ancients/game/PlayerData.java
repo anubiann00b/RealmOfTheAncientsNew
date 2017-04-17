@@ -21,11 +21,16 @@ public class PlayerData {
     
     public final AttackDirections attackDirections;
     
-    public PlayerData(int playerId, Asset asset, Rectangle hitboxRect,
+    public final int knockbackDuration;
+    public final int knockbackDistance;
+    
+    public PlayerData(int playerId, Asset asset, Rectangle hitboxRect, int knockbackDuration, int knockbackDistance,
                       int animFrameTimeMillis, DirAnim up, DirAnim right, DirAnim left, DirAnim down,
                       AttackDirections attackDirections) {
         this.playerId = playerId;
         this.asset = asset;
+        this.knockbackDuration = knockbackDuration;
+        this.knockbackDistance = knockbackDistance;
         this.hitboxRect = hitboxRect;
         this.animFrameTimeMillis = animFrameTimeMillis;
         this.up = up;

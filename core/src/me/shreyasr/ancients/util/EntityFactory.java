@@ -18,7 +18,7 @@ public class EntityFactory {
         CircleSlice swordHitbox = new CircleSlice(40, 90, 45);
         return new GamePlayer(id,
             new PlayerData(id, Asset.PLAYER, new Rectangle(8 - 32, 8 - 32, 48, 48),
-                200,
+                300, 135, 200,
                 new DirAnim(0,
                     new DirAnim.Frame(0, 16),
                     new DirAnim.Frame(16, 16),
@@ -60,14 +60,14 @@ public class EntityFactory {
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 7, 50, swordHitbox, 315),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 0, 150, swordHitbox, 360),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, -1, 800, swordHitbox, 0))
-                )
-            ),
+                )),
             new Pos(100, 100),
             new TexTransform(16, 16, 4),
             new DirectionalAnimation(),
             new Hitbox(),
             new WeaponHitbox(new CircleSlice(40, 90, 60)),
-            new SwordAttack()
+            new SwordAttack(),
+            new Knockback(new Pos(0, 0))
         );
     }
 }

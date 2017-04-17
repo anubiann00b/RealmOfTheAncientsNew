@@ -35,8 +35,25 @@ public class Pos implements KryoSerializable {
         this(other.x, other.y);
     }
     
+    public void set(Pos other) {
+        this.x = other.x;
+        this.y = other.y;
+    }
+    
+    public Pos sub(Pos other) {
+        return new Pos(x-other.x, y-other.y);
+    }
+    
     public float getDirDegrees() {
-        return (float) Math.toDegrees(Math.atan2(y, x));
+        return (float) Math.toDegrees(getDirRadians());
+    }
+    
+    public float getDirRadians() {
+        return (float) Math.atan2(y, x);
+    }
+    
+    private float magnitude() {
+        return (float) Math.sqrt(x*x + y*y);
     }
     
     public float distanceTo(Pos other) {
@@ -47,7 +64,9 @@ public class Pos implements KryoSerializable {
         return (other.x-this.x)*(other.x-this.x) + (other.y-this.y)*(other.y-this.y);
     }
     
-    public Pos sub(Pos other) {
-        return new Pos(x-other.x, y-other.y);
+    public Pos normalize() {
+        x /= magnitude();
+        y /= magnitude();
+        return this;
     }
 }

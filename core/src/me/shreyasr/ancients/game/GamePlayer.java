@@ -10,12 +10,7 @@ public class GamePlayer {
     public int id;
     
     public transient PlayerData data;
-    
-    public void setPlayerData(PlayerData data) {
-        this.data = data;
-    }
-    
-    public InputData input;
+    public transient InputData input;
     
     public Pos pos;
     public Pos vel = new Pos(0, 0);
@@ -24,25 +19,25 @@ public class GamePlayer {
     public WeaponHitbox weaponHitbox;
     public Attack currentAttack;
     public TexTransform ttc;
-    
-    public GamePlayer() { }
+    public Knockback knockback;
     
     public GamePlayer(int id, PlayerData data, Pos pos, TexTransform ttc, DirectionalAnimation animation,
-                      Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack) {
+                      Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack, Knockback knockback) {
         this.id = id;
+        this.data = data;
         this.pos = pos;
         this.ttc = ttc;
         this.animation = animation;
         this.hitbox = hitbox;
         this.weaponHitbox = weaponHitbox;
         this.currentAttack = attack;
-        this.setPlayerData(data);
+        this.knockback = knockback;
     }
     
     public GamePlayer(GamePlayer other) {
         this(other.id, other.data, new Pos(other.pos), new TexTransform(other.ttc),
                 new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox),
-                other.currentAttack.copy());
+                other.currentAttack.copy(), new Knockback(other.knockback));
         this.input = other.input;
     }
     
@@ -52,16 +47,17 @@ public class GamePlayer {
         if (input.w) vel.y = 5;
         if (input.s) vel.y = -5;
         
-        currentAttack.update(data, deltaMillis, pos, input, weaponHitbox);
-        
-        animation.update(data, deltaMillis, vel.x != 0 || vel.y != 0, vel.getDirDegrees());
-    
         hitbox.isBeingHit = false;
         for (GamePlayer player : players) {
              if (player.weaponHitbox.active && player.weaponHitbox.cs.overlaps(player.pos, hitbox.getRect(data, pos))) {
                  hitbox.isBeingHit = true;
+                 knockback.hitOrigin.set(player.pos);
              }
         }
+        
+        knockback.update(data, deltaMillis, pos, hitbox.isBeingHit);
+        currentAttack.update(data, deltaMillis, pos, input, weaponHitbox);
+        animation.update(data, deltaMillis, vel.x != 0 || vel.y != 0, vel.getDirDegrees());
         
         pos.x += vel.x;
         pos.y += vel.y;

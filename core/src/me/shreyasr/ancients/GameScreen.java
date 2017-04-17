@@ -38,6 +38,7 @@ public class GameScreen extends ScreenAdapter {
     private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
     public final SpriteBatch batch;
     public final ShapeRenderer shape;
+    private final BitmapFont font = new BitmapFont();
 
     public final OrthographicCamera camera = new OrthographicCamera(640, 480);
     public final ExtendViewport viewport = new ExtendViewport(800, 600, 1280, 720, camera);
@@ -57,7 +58,7 @@ public class GameScreen extends ScreenAdapter {
         client.addListener(new CustomPacketListener()
                 .doOnConnect(conn -> id = conn.getID())
                 .doOnGameState((conn, gameState) -> gameStateQueue.put(gameState))
-                .doOnPlayerData((conn, playerData) -> gameStateQueue.put(conn.getID(), playerData))
+                .doOnPlayerData((conn, playerData) -> gameStateQueue.put(playerData.playerId, playerData))
         );
     }
 
@@ -116,7 +117,7 @@ public class GameScreen extends ScreenAdapter {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         shape.setProjectionMatrix(camera.combined);
-    
+        
         renderer.setView(camera);
         renderer.render();
     
@@ -126,6 +127,12 @@ public class GameScreen extends ScreenAdapter {
             if (player.data != null) {
                 player.currentAttack.applyFrame(player.data, player.weaponHitbox);
                 TexTransform ttc = player.ttc;
+    
+                if (player.hitbox.isBeingHit && (int)(player.knockback.percentDone(player.data) * 4) % 2 == 0) {
+                    ttc.color = Color.RED;
+                } else {
+                    ttc.color = Color.WHITE;
+                }
     
                 if (ttc.hide) return;
     
@@ -157,6 +164,7 @@ public class GameScreen extends ScreenAdapter {
             }
         }
     
+        batch.setColor(Color.WHITE);
         InterceptingKryoSerialization serialization = ((InterceptingKryoSerialization)client.getSerialization());
         font.draw(batch, "Read rate: " + Utils.humanReadableBitCount(serialization.getReadByteCount() * 8), 8, Gdx.graphics.getHeight()-8-32);
         font.draw(batch, "Write rate: " + Utils.humanReadableBitCount(serialization.getWrittenByteCount() * 8), 8, Gdx.graphics.getHeight()-8-16);
@@ -188,6 +196,4 @@ public class GameScreen extends ScreenAdapter {
         
         shape.end();
     }
-    
-    BitmapFont font = new BitmapFont();
 }

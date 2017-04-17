@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.BindException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 public class ServerMain {
     
@@ -45,10 +44,9 @@ public class ServerMain {
     
         server.addListener(new CustomPacketListener()
                 .doOnConnect(conn -> {
-                    GameState state = currentGameState;
-                    StreamSupport.stream(state.players.spliterator(), false)
-                            .map(player -> player.data)
-                            .forEach(conn::sendTCP);
+                    for (GamePlayer player : currentGameState.players) {
+                        conn.sendTCP(player.data);
+                    }
                 })
                 .doOnInputData((conn, inputData) -> {
                     inputDataQueue.putInputData(conn.getID(), inputData, System.currentTimeMillis());
@@ -90,7 +88,7 @@ public class ServerMain {
             server.sendToAllUDP(currentGameState);
     
             timeDisconnected += 16;
-            if (timeDisconnected > 15000) {
+            if (timeDisconnected > 60 * 1000) {
                 server.close();
                 System.exit(0);
             }
