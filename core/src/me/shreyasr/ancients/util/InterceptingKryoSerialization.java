@@ -52,7 +52,7 @@ public class InterceptingKryoSerialization extends KryoSerialization {
         Log.debug("kryointerceptor", "Wrote bytes: " + byteCount + ", " + object
                 + " as " + Arrays.toString(bytesWritten).replace(", ", " "));
     
-        writtenByteTimeAverage.put(byteCount + 32); // +32 for packet header
+        writtenByteTimeAverage.put(byteCount);
         
         countingOutput.flush();
         
@@ -73,7 +73,7 @@ public class InterceptingKryoSerialization extends KryoSerialization {
             Log.debug("kryointerceptor", "Read bytes: " + byteCount + ", " + obj
                     + " as " + Arrays.toString(bytesWritten).replace(", ", " "));
         
-            readByteTimeAverage.put(byteCount + 32); // +32 for packet header
+            readByteTimeAverage.put(byteCount);
             
             return obj;
         } catch (KryoException e) {
