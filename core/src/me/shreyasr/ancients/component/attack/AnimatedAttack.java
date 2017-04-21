@@ -10,11 +10,11 @@ import me.shreyasr.ancients.network.InputData;
 import java.util.stream.Stream;
 
 @ToString
-public class SwordAttack extends Attack {
+public class AnimatedAttack extends Attack {
     
     @Override
-    public SwordAttack copy() {
-        SwordAttack attack = new SwordAttack();
+    public AnimatedAttack copy() {
+        AnimatedAttack attack = new AnimatedAttack();
         attack.attackTimer = attackTimer;
         attack.directionIndex = directionIndex;
         attack.currentWeaponIndex = currentWeaponIndex;
@@ -85,7 +85,7 @@ public class SwordAttack extends Attack {
                     return i;
                 }
             }
-            throw new RuntimeException("Error in SwordAttack, " + this);
+            throw new RuntimeException("Error in AnimatedAttack, " + this);
         } else {
             return -1;
         }

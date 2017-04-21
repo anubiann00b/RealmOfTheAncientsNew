@@ -2,7 +2,7 @@ package me.shreyasr.ancients.game;
 
 import lombok.ToString;
 import me.shreyasr.ancients.component.*;
-import me.shreyasr.ancients.component.attack.SwordAttack;
+import me.shreyasr.ancients.component.attack.AnimatedAttack;
 import me.shreyasr.ancients.network.InputData;
 
 @ToString(includeFieldNames = false, exclude = { "data" })
@@ -51,9 +51,9 @@ public class GamePlayer {
         if (input.moveDown) vel.y = -5;
         
         if (input.switchWeapons && !lastInput.switchWeapons && !currentAttack.isAttacking()) {
-            ((SwordAttack)currentAttack).currentWeaponIndex++;
-            if (((SwordAttack)currentAttack).currentWeaponIndex >= data.weapons.size()) {
-                ((SwordAttack)currentAttack).currentWeaponIndex = 0;
+            ((AnimatedAttack)currentAttack).currentWeaponIndex++;
+            if (((AnimatedAttack)currentAttack).currentWeaponIndex >= data.weapons.size()) {
+                ((AnimatedAttack)currentAttack).currentWeaponIndex = 0;
             }
         }
         
