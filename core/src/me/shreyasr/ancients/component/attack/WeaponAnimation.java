@@ -5,7 +5,8 @@ import me.shreyasr.ancients.Asset;
 public enum WeaponAnimation {
     
     SWORD(Asset.SWORD_SLASH, 48),
-    DAGGER(Asset.DAGGER_SLASH, 48);
+    DAGGER(Asset.DAGGER_SLASH, 48),
+    SPEAR(Asset.SPEAR_STAB, 80);
     
     public final Asset asset;
     public final int frameSize;

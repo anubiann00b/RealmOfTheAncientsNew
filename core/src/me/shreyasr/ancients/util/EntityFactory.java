@@ -39,28 +39,28 @@ public class EntityFactory {
                     new DirAnim.Frame(16, 48),
                     new DirAnim.Frame(32, 48),
                     new DirAnim.Frame(48, 48)),
-                new AttackDirections(
-                    new AttackDirections.AttackDirection((Predicate<Pos> & Serializable)mousePos -> mousePos.x >= 0 && mousePos.y >= 0,
+                new AttackDirections()
+                    .addAttackDirectionWithPredicate((Predicate<Pos> & Serializable) mousePos -> mousePos.x >= 0 && mousePos.y >= 0,
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 0, 50, swordHitbox, 0),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 1, 50, swordHitbox, 45),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 2, 150, swordHitbox, 90),
-                        new Attack.AnimFrame(WeaponAnimation.SWORD, -1, 800, swordHitbox, 0)),
-                    new AttackDirections.AttackDirection((Predicate<Pos> & Serializable) mousePos -> mousePos.x <= 0 && mousePos.y >= 0,
+                        new Attack.AnimFrame(WeaponAnimation.SWORD, -1, 800, swordHitbox, 0))
+                    .addAttackDirectionWithPredicate((Predicate<Pos> & Serializable) mousePos -> mousePos.x <= 0 && mousePos.y >= 0,
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 2, 50, swordHitbox, 90),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 3, 50, swordHitbox, 135),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 4, 150, swordHitbox, 180),
-                        new Attack.AnimFrame(WeaponAnimation.SWORD, -1, 800, swordHitbox, 0)),
-                    new AttackDirections.AttackDirection((Predicate<Pos> & Serializable) mousePos -> mousePos.x <= 0 && mousePos.y <= 0,
+                        new Attack.AnimFrame(WeaponAnimation.SWORD, -1, 800, swordHitbox, 0))
+                    .addAttackDirectionWithPredicate((Predicate<Pos> & Serializable) mousePos -> mousePos.x <= 0 && mousePos.y <= 0,
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 4, 50, swordHitbox, 180),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 5, 50, swordHitbox, 225),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 6, 150, swordHitbox, 270),
-                        new Attack.AnimFrame(WeaponAnimation.SWORD, -1, 800, swordHitbox, 0)),
-                    new AttackDirections.AttackDirection((Predicate<Pos> & Serializable) mousePos -> mousePos.x >= 0 && mousePos.y <= 0,
+                        new Attack.AnimFrame(WeaponAnimation.SWORD, -1, 800, swordHitbox, 0))
+                    .addAttackDirectionWithPredicate((Predicate<Pos> & Serializable) mousePos -> mousePos.x >= 0 && mousePos.y <= 0,
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 6, 50, swordHitbox, 270),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 7, 50, swordHitbox, 315),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, 0, 150, swordHitbox, 360),
                         new Attack.AnimFrame(WeaponAnimation.SWORD, -1, 800, swordHitbox, 0))
-                )),
+            ),
             new Pos(100, 100),
             new TexTransform(16, 16, 4),
             new DirectionalAnimation(),

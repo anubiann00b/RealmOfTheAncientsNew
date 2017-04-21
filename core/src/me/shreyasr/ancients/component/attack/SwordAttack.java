@@ -20,7 +20,7 @@ public class SwordAttack extends Attack {
         if (attackTimer == -1 && input.leftMouse) {
             attackTimer = 0;
             if (input.pos != null) {
-                directionIndex = playerData.attackDirections.getFramesForMousePos(input.pos.sub(pos));
+                directionIndex = playerData.attackDirections.getDirectionIndexForMousePos(input.pos.sub(pos));
             } else {
                 directionIndex = -1;
             }
@@ -77,7 +77,7 @@ public class SwordAttack extends Attack {
     }
     
     private AnimFrame[] getFrames(PlayerData playerData) {
-        return playerData.attackDirections.getFramesForIndex(directionIndex);
+        return playerData.attackDirections.getFramesForDirectionIndex(directionIndex);
     }
     
     @Override

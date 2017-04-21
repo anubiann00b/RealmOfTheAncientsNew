@@ -5,44 +5,76 @@ import lombok.ToString;
 import me.shreyasr.ancients.component.Attack;
 import me.shreyasr.ancients.component.Pos;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 @ToString(includeFieldNames = false)
 public class AttackDirections {
     
-    private final AttackDirection[] attackDirections;
+    private final List<AttackDirection> attackDirections;
+    private final List<DirectionPredicate> directionPredicates;
     
-    public AttackDirections(AttackDirection... attackDirections) {
-        this.attackDirections = attackDirections;
+    public AttackDirections() {
+        attackDirections = new ArrayList<>();
+        directionPredicates = new ArrayList<>();
     }
     
-    public Attack.AnimFrame[] getFramesForIndex(int index) {
-        if (index >= 0 && index < attackDirections.length) {
-            return attackDirections[index].frames;
+    public AttackDirections addAttackDirection(int directionIndex, Attack.AnimFrame... frames) {
+        attackDirections.add(new AttackDirection(directionIndex, frames));
+        return this;
+    }
+    
+    public AttackDirections addDirectionPredicate(int directionIndex, Predicate<Pos> isMousePosInThisDirection) {
+        directionPredicates.add(new DirectionPredicate(directionIndex, isMousePosInThisDirection));
+        return this;
+    }
+    
+    public AttackDirections addAttackDirectionWithPredicate(Predicate<Pos> isMousePosInThisDirection, Attack.AnimFrame... frames) {
+        int directionIndex = attackDirections.size();
+        addAttackDirection(directionIndex, frames);
+        addDirectionPredicate(directionIndex, isMousePosInThisDirection);
+        return this;
+    }
+    
+    public Attack.AnimFrame[] getFramesForDirectionIndex(int index) {
+        if (index >= 0 && index < attackDirections.size()) {
+            return attackDirections.get(index).frames;
         } else {
             return new Attack.AnimFrame[0];
         }
     }
     
-    public int getFramesForMousePos(Pos pos) {
-        for (int i = 0; i < attackDirections.length; i++) {
-            AttackDirection possibleAttack = attackDirections[i];
-            if (possibleAttack.isMousePosInThisAttackDirection.test(pos)) {
-                return i;
+    public int getDirectionIndexForMousePos(Pos pos) {
+        for (DirectionPredicate directionPredicate : directionPredicates) {
+            if (directionPredicate.isMousePosInThisDirection.test(pos)) {
+                return directionPredicate.directionIndex;
             }
         }
         Log.error("attackdirections", "Unable to find AttackDirection for mouse: " + pos + ", " + this);
         return -1;
     }
     
-    @ToString(includeFieldNames = false, exclude = {"isMousePosInThisAttackDirection"})
-    public static class AttackDirection {
+    @ToString(exclude = {"isMousePosInThisDirection"})
+    public static class DirectionPredicate {
+        
+        private final int directionIndex;
+        private final Predicate<Pos> isMousePosInThisDirection;
     
-        private final Predicate<Pos> isMousePosInThisAttackDirection;
+        public DirectionPredicate(int directionIndex, Predicate<Pos> isMousePosInThisDirection) {
+            this.directionIndex = directionIndex;
+            this.isMousePosInThisDirection = isMousePosInThisDirection;
+        }
+    }
+    
+    @ToString
+    public static class AttackDirection {
+        
+        private final int directionIndex;
         private final Attack.AnimFrame[] frames;
         
-        public AttackDirection(Predicate<Pos> isMousePosInThisAttackDirection, Attack.AnimFrame... frames) {
-            this.isMousePosInThisAttackDirection = isMousePosInThisAttackDirection;
+        public AttackDirection(int directionIndex, Attack.AnimFrame... frames) {
+            this.directionIndex = directionIndex;
             this.frames = frames;
         }
     }
