@@ -46,7 +46,7 @@ public class GameScreen extends ScreenAdapter {
     public final GameStateQueue gameStateQueue = new GameStateQueue();
     public final Client client;
     
-    private AccumulatingInputProcessor input = new AccumulatingInputProcessor(Input.Keys.W, Input.Keys.A, Input.Keys.S, Input.Keys.D);
+    private AccumulatingInputProcessor input = new AccumulatingInputProcessor(Input.Keys.W, Input.Keys.A, Input.Keys.S, Input.Keys.D, Input.Keys.R);
     private OrthogonalTiledMapRenderer renderer;
 
     private boolean initialized = false;
@@ -87,13 +87,14 @@ public class GameScreen extends ScreenAdapter {
         }
         Vector2 mousePosInWorld = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
         InputData inputData = new InputData(
+                new Pos(mousePosInWorld.x, mousePosInWorld.y),
                 input.get(Input.Keys.W),
                 input.get(Input.Keys.A),
                 input.get(Input.Keys.S),
                 input.get(Input.Keys.D),
-                new Pos(mousePosInWorld.x, mousePosInWorld.y),
                 Gdx.input.isButtonPressed(Input.Buttons.LEFT),
-                Gdx.input.isButtonPressed(Input.Buttons.RIGHT));
+                Gdx.input.isButtonPressed(Input.Buttons.RIGHT),
+                input.get(Input.Keys.R));
         client.sendUDP(inputData);
         
         GameState gameStateToDraw = gameStateQueue.getInterpolatedCurrentState(System.currentTimeMillis());

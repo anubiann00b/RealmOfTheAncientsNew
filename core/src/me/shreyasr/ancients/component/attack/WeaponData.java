@@ -9,28 +9,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@ToString(includeFieldNames = false)
-public class AttackDirections {
+@ToString
+public class WeaponData {
     
     private final List<AttackDirection> attackDirections;
     private final List<DirectionPredicate> directionPredicates;
     
-    public AttackDirections() {
+    public WeaponData() {
         attackDirections = new ArrayList<>();
         directionPredicates = new ArrayList<>();
     }
     
-    public AttackDirections addAttackDirection(int directionIndex, Attack.AnimFrame... frames) {
+    public WeaponData addAttackDirection(int directionIndex, Attack.AnimFrame... frames) {
         attackDirections.add(new AttackDirection(directionIndex, frames));
         return this;
     }
     
-    public AttackDirections addDirectionPredicate(int directionIndex, Predicate<Pos> isMousePosInThisDirection) {
+    public WeaponData addDirectionPredicate(int directionIndex, Predicate<Pos> isMousePosInThisDirection) {
         directionPredicates.add(new DirectionPredicate(directionIndex, isMousePosInThisDirection));
         return this;
     }
     
-    public AttackDirections addAttackDirectionWithPredicate(Predicate<Pos> isMousePosInThisDirection, Attack.AnimFrame... frames) {
+    public WeaponData addAttackDirectionWithPredicate(Predicate<Pos> isMousePosInThisDirection, Attack.AnimFrame... frames) {
         int directionIndex = attackDirections.size();
         addAttackDirection(directionIndex, frames);
         addDirectionPredicate(directionIndex, isMousePosInThisDirection);

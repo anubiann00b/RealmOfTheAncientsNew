@@ -8,8 +8,9 @@ import me.shreyasr.ancients.util.CircleSlice;
 
 public abstract class Attack {
     
-    public abstract void update(PlayerData playerData, int deltaMillis, Pos pos, InputData input, WeaponHitbox weaponHitbox);
     public abstract Attack copy();
+    public abstract boolean isAttacking();
+    public abstract void update(PlayerData playerData, int deltaMillis, Pos pos, InputData input, WeaponHitbox weaponHitbox);
     public abstract void applyFrame(PlayerData playerData, WeaponHitbox weaponHitbox);
     public abstract AnimFrame getCurrentAnimFrame(PlayerData playerData);
     

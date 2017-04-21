@@ -2,6 +2,7 @@ package me.shreyasr.ancients.game;
 
 import lombok.ToString;
 import me.shreyasr.ancients.component.*;
+import me.shreyasr.ancients.component.attack.SwordAttack;
 import me.shreyasr.ancients.network.InputData;
 
 @ToString(includeFieldNames = false, exclude = { "data" })
@@ -11,6 +12,7 @@ public class GamePlayer {
     
     public transient PlayerData data;
     public transient InputData input;
+    public transient InputData lastInput;
     
     public Pos pos;
     public Pos vel = new Pos(0, 0);
@@ -39,13 +41,21 @@ public class GamePlayer {
                 new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox),
                 other.currentAttack.copy(), new Knockback(other.knockback));
         this.input = other.input;
+        this.lastInput = other.lastInput;
     }
     
     public void update(int deltaMillis, PlayerSet players) {
-        if (input.d) vel.x = 5;
-        if (input.a) vel.x = -5;
-        if (input.w) vel.y = 5;
-        if (input.s) vel.y = -5;
+        if (input.moveRight) vel.x = 5;
+        if (input.moveLeft) vel.x = -5;
+        if (input.moveUp) vel.y = 5;
+        if (input.moveDown) vel.y = -5;
+        
+        if (input.switchWeapons && !lastInput.switchWeapons && !currentAttack.isAttacking()) {
+            ((SwordAttack)currentAttack).currentWeaponIndex++;
+            if (((SwordAttack)currentAttack).currentWeaponIndex >= data.weapons.size()) {
+                ((SwordAttack)currentAttack).currentWeaponIndex = 0;
+            }
+        }
         
         hitbox.isBeingHit = false;
         for (GamePlayer player : players) {

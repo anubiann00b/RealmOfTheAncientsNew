@@ -12,10 +12,15 @@ public class InstantAttack extends Attack {
     float dirAttacking = 0;
     
     @Override
+    public boolean isAttacking() {
+        return attacking;
+    }
+    
+    @Override
     public void update(PlayerData playerData, int deltaMillis, Pos pos, InputData input, WeaponHitbox weaponHitbox) {
-        attacking = input.leftMouse;
-        if (input.pos != null) {
-            dirAttacking = input.pos.sub(pos).getDirDegrees();
+        attacking = input.attack;
+        if (input.mousePos != null) {
+            dirAttacking = input.mousePos.sub(pos).getDirDegrees();
         }
         
         applyFrame(playerData, weaponHitbox);

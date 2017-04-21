@@ -12,15 +12,30 @@ import java.util.stream.Stream;
 @ToString
 public class SwordAttack extends Attack {
     
+    @Override
+    public SwordAttack copy() {
+        SwordAttack attack = new SwordAttack();
+        attack.attackTimer = attackTimer;
+        attack.directionIndex = directionIndex;
+        attack.currentWeaponIndex = currentWeaponIndex;
+        return attack;
+    }
+    
     private int directionIndex = -1;
     public int attackTimer = -1; // -1 denotes not attacking
+    public int currentWeaponIndex = 0;
+    
+    @Override
+    public boolean isAttacking() {
+        return attackTimer != -1;
+    }
     
     @Override
     public void update(PlayerData playerData, int deltaMillis, Pos pos, InputData input, WeaponHitbox weaponHitbox) {
-        if (attackTimer == -1 && input.leftMouse) {
+        if (attackTimer == -1 && input.attack) {
             attackTimer = 0;
-            if (input.pos != null) {
-                directionIndex = playerData.attackDirections.getDirectionIndexForMousePos(input.pos.sub(pos));
+            if (input.mousePos != null) {
+                directionIndex = getCurrentWeapon(playerData).getDirectionIndexForMousePos(input.mousePos.sub(pos));
             } else {
                 directionIndex = -1;
             }
@@ -77,14 +92,10 @@ public class SwordAttack extends Attack {
     }
     
     private AnimFrame[] getFrames(PlayerData playerData) {
-        return playerData.attackDirections.getFramesForDirectionIndex(directionIndex);
+        return getCurrentWeapon(playerData).getFramesForDirectionIndex(directionIndex);
     }
     
-    @Override
-    public SwordAttack copy() {
-        SwordAttack attack = new SwordAttack();
-        attack.attackTimer = attackTimer;
-        attack.directionIndex = directionIndex;
-        return attack;
+    private WeaponData getCurrentWeapon(PlayerData playerData) {
+        return playerData.weapons.get(currentWeaponIndex);
     }
 }

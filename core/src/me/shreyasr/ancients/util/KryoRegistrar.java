@@ -9,7 +9,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.ClosureSerializer;
 import me.shreyasr.ancients.Asset;
 import me.shreyasr.ancients.component.*;
-import me.shreyasr.ancients.component.attack.AttackDirections;
+import me.shreyasr.ancients.component.attack.WeaponData;
 import me.shreyasr.ancients.component.attack.InstantAttack;
 import me.shreyasr.ancients.component.attack.SwordAttack;
 import me.shreyasr.ancients.component.attack.WeaponAnimation;
@@ -21,6 +21,7 @@ import me.shreyasr.ancients.network.InputData;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.lang.invoke.SerializedLambda;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class KryoRegistrar {
@@ -38,6 +39,7 @@ public class KryoRegistrar {
     public static void register(Kryo kryo) {
         kryo.register(Color.class);
         kryo.register(HashMap.class);
+        kryo.register(ArrayList.class);
         
         kryo.register(Object[].class);
         kryo.register(java.lang.Class.class);
@@ -69,9 +71,9 @@ public class KryoRegistrar {
         kryo.register(WeaponAnimation.class);
         kryo.register(InstantAttack.class);
         kryo.register(SwordAttack.class);
-        kryo.register(AttackDirections.class);
-        kryo.register(AttackDirections.AttackDirection.class);
-        kryo.register(AttackDirections.AttackDirection[].class);
+        kryo.register(WeaponData.class);
+        kryo.register(WeaponData.AttackDirection.class);
+        kryo.register(WeaponData.DirectionPredicate.class);
         kryo.register(Knockback.class);
         
         kryo.addDefaultSerializer(Color.class, new Serializer<Color>() {

@@ -35,6 +35,7 @@ public class ServerMain {
         } catch (BindException e) {
             if (e.getMessage().equals("Address already in use: bind")) {
                 Log.error("server", "Port in use, failed to start");
+                e.printStackTrace();
                 server.close();
                 System.exit(0);
             } else {
@@ -79,6 +80,7 @@ public class ServerMain {
             }
         
             for (GamePlayer player : currentGameState.players) {
+                player.lastInput = player.input;
                 player.input = inputDataQueue.getNextInput(player.id, processTime);
             }
             
