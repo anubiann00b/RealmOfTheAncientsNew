@@ -1,5 +1,9 @@
 package me.shreyasr.ancients.component.attack;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoSerializable;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import lombok.ToString;
 import me.shreyasr.ancients.component.Attack;
 import me.shreyasr.ancients.component.Pos;
@@ -10,7 +14,21 @@ import me.shreyasr.ancients.network.InputData;
 import java.util.stream.Stream;
 
 @ToString
-public class AnimatedAttack extends Attack {
+public class AnimatedAttack extends Attack implements KryoSerializable {
+    
+    @Override
+    public void write(Kryo kryo, Output output) {
+        output.writeInt(directionIndex+1, true);
+        output.writeInt(attackTimer+1, true);
+        output.writeInt(currentWeaponIndex, true);
+    }
+    
+    @Override
+    public void read(Kryo kryo, Input input) {
+        directionIndex = input.readInt(true)-1;
+        attackTimer = input.readInt(true)-1;
+        currentWeaponIndex = input.readInt(true);
+    }
     
     @Override
     public AnimatedAttack copy() {
@@ -18,8 +36,11 @@ public class AnimatedAttack extends Attack {
         attack.attackTimer = attackTimer;
         attack.directionIndex = directionIndex;
         attack.currentWeaponIndex = currentWeaponIndex;
+        attack.nextWeaponIndex = nextWeaponIndex;
         return attack;
     }
+    
+    public transient int nextWeaponIndex = 0;
     
     private int directionIndex = -1;
     public int attackTimer = -1; // -1 denotes not attacking
@@ -34,6 +55,7 @@ public class AnimatedAttack extends Attack {
     public void update(PlayerData playerData, int deltaMillis, Pos pos, InputData input, WeaponHitbox weaponHitbox) {
         if (attackTimer == -1 && input.attack) {
             attackTimer = 0;
+            currentWeaponIndex = nextWeaponIndex;
             if (input.mousePos != null) {
                 directionIndex = getCurrentWeapon(playerData).getDirectionIndexForMousePos(input.mousePos.sub(pos));
             } else {
@@ -54,13 +76,6 @@ public class AnimatedAttack extends Attack {
     }
     
     @Override
-    public AnimFrame getCurrentAnimFrame(PlayerData playerData) {
-        AnimFrame[] frames = getFrames(playerData);
-        int currentFrame = getCurrentFrame(frames);
-        return currentFrame == -1 ? null : frames[currentFrame];
-    }
-    
-    @Override
     public void applyFrame(PlayerData playerData, WeaponHitbox weaponHitbox) {
         AnimFrame frame = getCurrentAnimFrame(playerData);
         
@@ -73,7 +88,14 @@ public class AnimatedAttack extends Attack {
         }
     }
     
-    private int getCurrentFrame(AnimFrame[] frames) {
+    @Override
+    public AnimFrame getCurrentAnimFrame(PlayerData playerData) {
+        AnimFrame[] frames = getFrames(playerData);
+        int currentFrame = getCurrentAnimFrameIndex(frames);
+        return currentFrame == -1 ? null : frames[currentFrame];
+    }
+    
+    private int getCurrentAnimFrameIndex(AnimFrame[] frames) {
         if (attackTimer > -1) {
             int timeUpToEndOfFrame = 0;
             for (int i = 0; i < frames.length; i++) {

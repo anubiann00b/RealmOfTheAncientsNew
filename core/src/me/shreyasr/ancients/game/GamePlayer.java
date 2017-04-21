@@ -50,10 +50,10 @@ public class GamePlayer {
         if (input.moveUp) vel.y = 5;
         if (input.moveDown) vel.y = -5;
         
-        if (input.switchWeapons && !lastInput.switchWeapons && !currentAttack.isAttacking()) {
-            ((AnimatedAttack)currentAttack).currentWeaponIndex++;
-            if (((AnimatedAttack)currentAttack).currentWeaponIndex >= data.weapons.size()) {
-                ((AnimatedAttack)currentAttack).currentWeaponIndex = 0;
+        if (input.switchWeapons && !lastInput.switchWeapons) {
+            ((AnimatedAttack)currentAttack).nextWeaponIndex++;
+            if (((AnimatedAttack)currentAttack).nextWeaponIndex >= data.weapons.size()) {
+                ((AnimatedAttack)currentAttack).nextWeaponIndex = 0;
             }
         }
         

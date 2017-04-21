@@ -104,17 +104,17 @@ public class EntityFactory {
         gamePlayer.data.weapons.add(new WeaponData()
             .addAttackDirectionWithPredicate(
                 (Predicate<Pos> & Serializable) mousePos -> mousePos.x >= mousePos.y && mousePos.x >= -mousePos.y,
-                new Attack.AnimFrame(WeaponAnimation.SPEAR, 0, 30, spearHitbox, 0),
+                new Attack.AnimFrame(WeaponAnimation.SPEAR, 0, 60, spearHitbox, 0),
                 new Attack.AnimFrame(WeaponAnimation.SPEAR, 1, 100, spearHitboxExtended, 0),
                 new Attack.AnimFrame(WeaponAnimation.SPEAR, -1, 1200, null, 0))
             .addAttackDirectionWithPredicate(
                 (Predicate<Pos> & Serializable) mousePos -> mousePos.x <= mousePos.y && mousePos.x >= -mousePos.y,
-                new Attack.AnimFrame(WeaponAnimation.SPEAR, 2, 30, spearHitbox, 90),
+                new Attack.AnimFrame(WeaponAnimation.SPEAR, 2, 60, spearHitbox, 90),
                 new Attack.AnimFrame(WeaponAnimation.SPEAR, 3, 100, spearHitboxExtended, 90),
                 new Attack.AnimFrame(WeaponAnimation.SPEAR, -1, 1200, null, 90))
             .addAttackDirectionWithPredicate(
                 (Predicate<Pos> & Serializable) mousePos -> mousePos.x <= mousePos.y && mousePos.x <= -mousePos.y,
-                new Attack.AnimFrame(WeaponAnimation.SPEAR, 4, 30, spearHitbox, 180),
+                new Attack.AnimFrame(WeaponAnimation.SPEAR, 4, 60, spearHitbox, 180),
                 new Attack.AnimFrame(WeaponAnimation.SPEAR, 5, 100, spearHitboxExtended, 180),
                 new Attack.AnimFrame(WeaponAnimation.SPEAR, -1, 1200, null, 180))
             .addAttackDirectionWithPredicate(
