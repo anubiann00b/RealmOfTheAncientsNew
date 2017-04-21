@@ -1,10 +1,44 @@
 package me.shreyasr.ancients.util;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.esotericsoftware.minlog.Log;
 
 import java.util.Locale;
 
 public class Utils {
+    
+    public static Datafile readDataFile(FileHandle file) {
+        Datafile datafile = new Datafile();
+    
+        String data = file.readString();
+        for (String line : data.split("\r\n")) {
+            if (line.charAt(0) == ';') continue;
+            
+            int colonPos = line.indexOf('=');
+            if (colonPos == -1) {
+                Log.warn("datafile", "Line malformed: " + line);
+                continue;
+            }
+            
+            String key = line.substring(0, colonPos);
+            String valueString = line.substring(colonPos+1);
+            
+            try {
+                int valueInt = Integer.valueOf(valueString);
+                datafile.putInt(key, valueInt);
+            } catch (NumberFormatException ignored) {
+                try {
+                    float valueFloat = Float.valueOf(valueString);
+                    datafile.putFloat(key, valueFloat);
+                } catch (NumberFormatException ignored2) {
+                    datafile.putString(key, valueString);
+                }
+            }
+        }
+        
+        return datafile;
+    }
     
     /**
      * Draws an arc of a circle on the ShapeRenderer as a polyline.

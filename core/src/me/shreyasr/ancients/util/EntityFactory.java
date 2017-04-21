@@ -1,6 +1,7 @@
 package me.shreyasr.ancients.util;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.esotericsoftware.minlog.Log;
 import me.shreyasr.ancients.Asset;
 import me.shreyasr.ancients.component.*;
 import me.shreyasr.ancients.component.attack.AnimatedAttack;
@@ -15,10 +16,11 @@ import java.util.function.Predicate;
 public class EntityFactory {
     
     // @formatter:off
-    public static GamePlayer createGamePlayer(int id) {
+    public static GamePlayer createGamePlayer(int id, Datafile data) {
+        Log.info("entityfactory", data.toString());
         GamePlayer gamePlayer = new GamePlayer(id,
             new PlayerData(id, Asset.PLAYER, new Rectangle(8 - 32, 8 - 32, 48, 48),
-                300, 135, 200,
+                data.getInt("knockbackDuration"), data.getInt("knockbackDistance"), data.getInt("animFrameTimeMillis"),
                 new DirAnim(0,
                     new DirAnim.Frame(0, 16),
                     new DirAnim.Frame(16, 16),
@@ -44,7 +46,7 @@ public class EntityFactory {
             new TexTransform(16, 16, 4),
             new DirectionalAnimation(),
             new Hitbox(),
-            new WeaponHitbox(new CircleSlice(40, 90, 60)),
+            new WeaponHitbox(new CircleSlice(0, 0, 0)),
             new AnimatedAttack(),
             new Knockback(new Pos(0, 0))
         );
