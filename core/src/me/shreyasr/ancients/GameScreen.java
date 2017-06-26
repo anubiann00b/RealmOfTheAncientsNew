@@ -129,7 +129,7 @@ public class GameScreen extends ScreenAdapter {
                 player.currentAttack.applyFrame(player.data, player.weaponHitbox);
                 TexTransform ttc = player.ttc;
     
-                if (player.hitbox.isBeingHit && (int)(player.knockback.percentDone(player.data) * 4) % 2 == 0) {
+                if (player.knockback.isInKnockback() && (int)(player.knockback.percentDone(player.data) * 4) % 2 == 0) {
                     ttc.color = Color.RED;
                 } else {
                     ttc.color = Color.WHITE;
@@ -193,6 +193,12 @@ public class GameScreen extends ScreenAdapter {
                 shape.setColor(Color.WHITE);
                 player.weaponHitbox.cs.draw(shape, player.pos);
             }
+            
+            shape.set(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(Color.RED);
+            shape.rect(player.pos.x - 32, player.pos.y - 40, 64, 8);
+            shape.setColor(Color.GREEN);
+            shape.rect(player.pos.x - 32, player.pos.y - 40, 64*((float)player.stats.currentHealth/player.stats.maxHealth), 8);
         }
         
         shape.end();

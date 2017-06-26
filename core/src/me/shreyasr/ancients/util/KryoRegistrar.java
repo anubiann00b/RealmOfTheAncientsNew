@@ -72,6 +72,7 @@ public class KryoRegistrar {
         kryo.register(WeaponData.AttackDirection.class);
         kryo.register(WeaponData.DirectionPredicate.class);
         kryo.register(Knockback.class);
+        kryo.register(PlayerStats.class);
         
         kryo.addDefaultSerializer(Color.class, new Serializer<Color>() {
             @Override

@@ -7,6 +7,7 @@ import me.shreyasr.ancients.game.PlayerData;
 @ToString
 public class Hitbox {
     
+    /** If this hitbox is currently being intersected by a hostile damage-dealing hitbox */
     public boolean isBeingHit = false;
     
     public Hitbox() { }

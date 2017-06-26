@@ -22,9 +22,10 @@ public class GamePlayer {
     public Attack currentAttack;
     public TexTransform ttc;
     public Knockback knockback;
+    public PlayerStats stats;
     
     public GamePlayer(int id, PlayerData data, Pos pos, TexTransform ttc, DirectionalAnimation animation,
-                      Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack, Knockback knockback) {
+                      Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack, Knockback knockback, PlayerStats stats) {
         this.id = id;
         this.data = data;
         this.pos = pos;
@@ -34,12 +35,13 @@ public class GamePlayer {
         this.weaponHitbox = weaponHitbox;
         this.currentAttack = attack;
         this.knockback = knockback;
+        this.stats = stats;
     }
     
     public GamePlayer(GamePlayer other) {
         this(other.id, other.data, new Pos(other.pos), new TexTransform(other.ttc),
                 new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox),
-                other.currentAttack.copy(), new Knockback(other.knockback));
+                other.currentAttack.copy(), new Knockback(other.knockback), new PlayerStats(other.stats));
         this.input = other.input;
         this.lastInput = other.lastInput;
     }
@@ -58,10 +60,11 @@ public class GamePlayer {
         }
         
         hitbox.isBeingHit = false;
-        for (GamePlayer player : players) {
-             if (player.weaponHitbox.active && player.weaponHitbox.cs.overlaps(player.pos, hitbox.getRect(data, pos))) {
+        for (GamePlayer otherPlayer : players) {
+             if (otherPlayer.weaponHitbox.active && otherPlayer.weaponHitbox.cs.overlaps(otherPlayer.pos, hitbox.getRect(data, pos))) {
+                 if (!hitbox.isBeingHit && !knockback.isInKnockback()) stats.currentHealth -= 1;
                  hitbox.isBeingHit = true;
-                 knockback.hitOrigin.set(player.pos);
+                 knockback.hitOrigin.set(otherPlayer.pos);
              }
         }
         

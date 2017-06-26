@@ -47,6 +47,12 @@ public class Knockback {
         return Utils.clamp(0, 2*percent - percent*percent, 1);
     }
     
+    /** True if the player is currently under a knockback effect, false otherwise */
+    public boolean isInKnockback() {
+        return timeElapsed != -1;
+    }
+    
+    /** A value from 0 to 1, representing the progress of the knockback effect */
     public float percentDone(PlayerData playerData) {
         return Utils.clamp(0, (float) timeElapsed / playerData.knockbackDuration, 1);
     }

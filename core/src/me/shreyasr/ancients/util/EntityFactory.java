@@ -48,7 +48,8 @@ public class EntityFactory {
             new Hitbox(),
             new WeaponHitbox(new CircleSlice(0, 0, 0)),
             new AnimatedAttack(),
-            new Knockback(new Pos(0, 0))
+            new Knockback(new Pos(0, 0)),
+            new PlayerStats(5)
         );
         
         CircleSlice swordHitbox = new CircleSlice(40, 90, 45);
