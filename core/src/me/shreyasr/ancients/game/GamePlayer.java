@@ -65,6 +65,10 @@ public class GamePlayer {
                         ((AnimatedAttack) currentAttack).nextWeaponIndex = 0;
                     }
                 }
+    
+                if (input.dash) {
+                    stats.currentHealth = 0;
+                }
             
                 hitbox.isBeingHit = false;
                 for (GamePlayer otherPlayer : players) {
@@ -95,10 +99,11 @@ public class GamePlayer {
                 
             case DEAD:
                 stats.deathTimer += deltaMillis;
+                animation.setStandingAnimFrame(data, 1080f * stats.deathTimer / stats.maxDeathTime + 270);
             
-                if (stats.deathTimer > 2000) {
+                if (stats.deathTimer > stats.maxDeathTime) {
                     currentStatus = Status.RESPAWNING;
-                    stats.respawnTimer = 4000;
+                    stats.respawnTimer = stats.maxRespawnTime;
                 }
                 break;
                 

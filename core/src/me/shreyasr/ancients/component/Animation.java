@@ -12,4 +12,6 @@ public abstract class Animation {
     public abstract void update(PlayerData playerData, int deltaMillis, boolean moving, float facingDir);
     public void overrideAnimation(int newStandingFrame) { }
     public void resetStandingFrame() { }
+    
+    public abstract void setStandingAnimFrame(PlayerData playerData, float facingDegrees);
 }

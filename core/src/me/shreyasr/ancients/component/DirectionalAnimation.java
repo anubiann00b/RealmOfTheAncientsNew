@@ -70,6 +70,14 @@ public class DirectionalAnimation extends Animation {
         }
     }
     
+    @Override
+    public void setStandingAnimFrame(PlayerData playerData, float facingDegrees) {
+        Direction dir = getDir(true, facingDegrees);
+        DirAnim dirAnim = getDirAnim(playerData, dir);
+        lastDir = dir;
+        renderFrame = dirAnim.standingFrame;
+    }
+    
     private Direction getDir(boolean moving, float facingDegrees) {
         if (!moving) {
             return lastDir;
