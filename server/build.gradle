@@ -3,7 +3,7 @@ apply plugin: "java"
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-project.ext.mainClassName = "me.shreyasr.ancients.ServerMain"
+project.ext.mainClassName = "me.shreyasr.ancients.server.ServerMain"
 project.ext.assetsDir = new File("../desktop/assets");
 
 task run(dependsOn: classes, type: JavaExec) {

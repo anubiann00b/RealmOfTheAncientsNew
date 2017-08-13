@@ -1,4 +1,4 @@
-package me.shreyasr.ancients;
+package me.shreyasr.ancients.server;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
@@ -9,7 +9,10 @@ import com.esotericsoftware.minlog.Log;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.GameState;
 import me.shreyasr.ancients.network.CustomPacketListener;
-import me.shreyasr.ancients.util.*;
+import me.shreyasr.ancients.util.EntityFactory;
+import me.shreyasr.ancients.util.InputDataQueue;
+import me.shreyasr.ancients.util.KryoRegistrar;
+import me.shreyasr.ancients.util.Utils;
 
 import java.io.IOException;
 import java.net.BindException;
