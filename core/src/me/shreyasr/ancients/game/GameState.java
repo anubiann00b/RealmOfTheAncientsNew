@@ -43,7 +43,8 @@ public class GameState implements Comparable<GameState> {
         time = timeToInterpolateTo;
         
         for (GamePlayer player : players) {
-            GamePlayer nextPlayer = next.players.getById(player.id);
+            GamePlayer nextPlayer = next.players.getByIdOpt(player.id)
+                    .orElseThrow(() -> new RuntimeException("Interpolating to game state without player"));
             player.interpolateTo(nextPlayer, percentageToNext);
         }
     }

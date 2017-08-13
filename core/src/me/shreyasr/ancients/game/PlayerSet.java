@@ -5,6 +5,7 @@ import lombok.ToString;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 @ToString(includeFieldNames = false)
 public class PlayerSet implements Iterable<GamePlayer> {
@@ -25,6 +26,10 @@ public class PlayerSet implements Iterable<GamePlayer> {
         for (Map.Entry<Integer, GamePlayer> otherEntry : other.players.entrySet()) {
             this.players.put(otherEntry.getKey(), new GamePlayer(otherEntry.getValue()));
         }
+    }
+    
+    public Optional<GamePlayer> getByIdOpt(int id) {
+        return Optional.ofNullable(getById(id));
     }
     
     public GamePlayer getById(int id) {

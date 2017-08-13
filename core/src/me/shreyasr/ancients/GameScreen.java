@@ -99,20 +99,16 @@ public class GameScreen extends ScreenAdapter {
         
         GameState gameStateToDraw = gameStateQueue.getInterpolatedCurrentState(System.currentTimeMillis());
         
-        Pos playerPos;
-        GamePlayer myPlayer = gameStateToDraw.players.getById(id);
-        if (myPlayer != null) {
-            playerPos = myPlayer.pos;
-        } else {
-            playerPos = new Pos(0, 0);
-        }
+        Pos playerPos = gameStateToDraw.players.getByIdOpt(id)
+                .map(p -> p.pos)
+                .orElse(new Pos(0, 0));
     
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         camera.position.set(
                 Utils.clamp(viewport.getWorldWidth()/2,  playerPos.x, 3840- viewport.getWorldWidth()/2),
-                Utils.clamp(viewport.getWorldHeight()/2, playerPos.y, 3840- viewport.getWorldHeight() /2),
+                Utils.clamp(viewport.getWorldHeight()/2, playerPos.y, 3840- viewport.getWorldHeight()/2),
                 0);
         viewport.apply();
         camera.update();
