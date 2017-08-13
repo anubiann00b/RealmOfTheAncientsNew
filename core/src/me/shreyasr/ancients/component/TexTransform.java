@@ -3,7 +3,6 @@ package me.shreyasr.ancients.component;
 import com.badlogic.gdx.graphics.Color;
 import com.esotericsoftware.kryo.DefaultSerializer;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -11,7 +10,7 @@ import lombok.ToString;
 
 @ToString
 @DefaultSerializer(TexTransform.TexTransformSerializer.class)
-public class TexTransform implements KryoSerializable {
+public class TexTransform {
     
     public static class TexTransformSerializer extends Serializer<TexTransform> {
     
@@ -20,6 +19,8 @@ public class TexTransform implements KryoSerializable {
             output.writeInt(ttc.srcWidth, true);
             output.writeInt(ttc.srcHeight, true);
             output.writeInt(ttc.screenWidth / ttc.srcWidth, true);
+            output.writeFloat(ttc.rotation);
+            output.writeBoolean(ttc.hide);
         }
     
         @Override
@@ -27,18 +28,12 @@ public class TexTransform implements KryoSerializable {
             int width = input.readInt(true);
             int height = input.readInt(true);
             int scale = input.readInt(true);
-            return new TexTransform(width, height, scale);
+            
+            TexTransform ttc = new TexTransform(width, height, scale);
+            ttc.rotation = input.readFloat();
+            ttc.hide = input.readBoolean();
+            return ttc;
         }
-    }
-    
-    @Override
-    public void write(Kryo kryo, Output output) {
-        
-    }
-    
-    @Override
-    public void read(Kryo kryo, Input input) {
-        
     }
 
     public int screenWidth;

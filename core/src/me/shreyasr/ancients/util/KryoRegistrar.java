@@ -51,6 +51,7 @@ public class KryoRegistrar {
         kryo.register(GameState.class);
         kryo.register(PlayerSet.class);
         kryo.register(GamePlayer.class);
+        kryo.register(GamePlayer.Status.class);
         kryo.register(PlayerData.class);
         kryo.register(Asset.class);
         kryo.register(TexTransform.class);

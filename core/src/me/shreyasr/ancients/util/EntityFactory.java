@@ -43,6 +43,7 @@ public class EntityFactory {
                     new DirAnim.Frame(48, 48))
             ),
             new Pos(100, 100),
+            GamePlayer.Status.ALIVE,
             new TexTransform(16, 16, 4),
             new DirectionalAnimation(),
             new Hitbox(),

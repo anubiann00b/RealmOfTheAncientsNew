@@ -125,13 +125,13 @@ public class GameScreen extends ScreenAdapter {
                 player.currentAttack.applyFrame(player.data, player.weaponHitbox);
                 TexTransform ttc = player.ttc;
     
+                if (ttc.hide) continue;
+    
                 if (player.knockback.isInKnockback() && (int)(player.knockback.percentDone(player.data) * 4) % 2 == 0) {
                     ttc.color = Color.RED;
                 } else {
                     ttc.color = Color.WHITE;
                 }
-    
-                if (ttc.hide) return;
     
                 ttc.srcX = player.animation.getSrcX(player.data);
                 ttc.srcY = player.animation.getSrcY(player.data);

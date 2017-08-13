@@ -24,7 +24,7 @@ public class ServerMain {
     private static Server server;
     
     private static GameState currentGameState = new GameState(System.currentTimeMillis() - 16);
-    private static int timeDisconnected = 0;
+    private static int millisWithNoPackets = 0;
     private static InputDataQueue inputDataQueue = new InputDataQueue();
     private static final List<Integer> idsToRemove = new ArrayList<>();
 
@@ -67,7 +67,7 @@ public class ServerMain {
                 })
                 .doOnInputData((conn, inputData) -> {
                     inputDataQueue.putInputData(conn.getID(), inputData, System.currentTimeMillis());
-                    timeDisconnected = 0;
+                    millisWithNoPackets = 0;
                 })
                 .doOnDisconnect(conn -> { synchronized (idsToRemove) { idsToRemove.add(conn.getID()); } }));
     
@@ -105,8 +105,8 @@ public class ServerMain {
         
             server.sendToAllUDP(currentGameState);
         
-            timeDisconnected += 16;
-            if (timeDisconnected > 60 * 1000) {
+            millisWithNoPackets += 16;
+            if (millisWithNoPackets > 5 * 1000) {
                 server.close();
                 System.exit(0);
             }
