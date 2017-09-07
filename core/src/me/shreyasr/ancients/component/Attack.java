@@ -14,6 +14,9 @@ public abstract class Attack {
     public abstract void applyFrame(PlayerData playerData, WeaponHitbox weaponHitbox);
     public abstract AnimFrame getCurrentAnimFrame(PlayerData playerData);
     
+    public abstract int getNextWeaponIndex();
+    public abstract void setNextWeaponIndex(PlayerData playerData, int nextWeaponIndex);
+    
     @ToString
     public static class AnimFrame {
         

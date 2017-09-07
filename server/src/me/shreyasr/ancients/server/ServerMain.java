@@ -106,7 +106,7 @@ public class ServerMain {
             server.sendToAllUDP(currentGameState);
         
             millisWithNoPackets += 16;
-            if (millisWithNoPackets > 5 * 1000) {
+            if (millisWithNoPackets > 120 * 1000) {
                 server.close();
                 System.exit(0);
             }

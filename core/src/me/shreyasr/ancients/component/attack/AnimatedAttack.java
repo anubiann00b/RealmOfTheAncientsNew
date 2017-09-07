@@ -89,6 +89,19 @@ public class AnimatedAttack extends Attack implements KryoSerializable {
     }
     
     @Override
+    public int getNextWeaponIndex() {
+        return nextWeaponIndex;
+    }
+    
+    @Override
+    public void setNextWeaponIndex(PlayerData playerData, int nextWeaponIndex) {
+        if (nextWeaponIndex < 0 || nextWeaponIndex >= playerData.weapons.size()) {
+            throw new AssertionError("Trying to switch to weapon at " + nextWeaponIndex);
+        }
+        this.nextWeaponIndex = nextWeaponIndex;
+    }
+    
+    @Override
     public AnimFrame getCurrentAnimFrame(PlayerData playerData) {
         AnimFrame[] frames = getFrames(playerData);
         int currentFrame = getCurrentAnimFrameIndex(frames);

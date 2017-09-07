@@ -172,7 +172,7 @@ public class GameScreen extends ScreenAdapter {
         shape.begin();
     
         for (GamePlayer player : gameStateToDraw.players) {
-            if (player.data != null) {
+            if (player.data != null && player.currentStatus == GamePlayer.Status.ALIVE) {
                 Rectangle rect = player.hitbox.getRect(player.data, player.pos);
                 if (player.hitbox.isBeingHit) {
                     shape.set(ShapeRenderer.ShapeType.Filled);

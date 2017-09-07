@@ -33,6 +33,16 @@ public class InstantAttack extends Attack {
     }
     
     @Override
+    public int getNextWeaponIndex() {
+        return 0;
+    }
+    
+    @Override
+    public void setNextWeaponIndex(PlayerData playerData, int nextWeaponIndex) {
+        
+    }
+    
+    @Override
     public AnimFrame getCurrentAnimFrame(PlayerData playerData) {
         return null;
     }
