@@ -7,7 +7,8 @@ import me.shreyasr.ancients.network.InputData;
 public abstract class Dash {
     
     public abstract Dash copy();
+    public abstract boolean isDashing();
     public abstract void beginDash(PlayerData playerData, int deltaMillis, Pos pos, InputData input);
-    public abstract void cancel();
+    public abstract void cancelDash();
     public abstract void update(PlayerData data, int deltaMillis, Pos pos);
 }

@@ -40,8 +40,19 @@ public class Pos implements KryoSerializable {
         this.y = other.y;
     }
     
+    public Pos add(Pos other) {
+        return new Pos(x+other.x, y+other.y);
+    }
+    
     public Pos sub(Pos other) {
         return new Pos(x-other.x, y-other.y);
+    }
+    
+    /** Returns a pos that represents the point otherPercentage of the way between this and other */
+    public Pos interpolateTo(Pos other, float otherPercentage) {
+        assert otherPercentage >= 0 && otherPercentage <= 1 : "Percentage out of bounds: " + otherPercentage;
+        float thisPercentage = 1-otherPercentage;
+        return new Pos(x*thisPercentage + other.x*otherPercentage, y*thisPercentage + other.y*otherPercentage);
     }
     
     public float getDirDegrees() {

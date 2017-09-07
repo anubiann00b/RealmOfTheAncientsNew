@@ -80,7 +80,7 @@ public class GamePlayer {
                         }
                         hitbox.isBeingHit = true;
                         knockback.hitOrigin.set(otherPlayer.pos);
-                        dash.cancel();
+                        dash.cancelDash();
                     }
                 }
                 
@@ -94,9 +94,11 @@ public class GamePlayer {
                         stats.deathTimer = 0;
                         currentStatus = Status.DEAD;
                     }
-                
-                    pos.x += vel.x;
-                    pos.y += vel.y;
+                    
+                    if (!dash.isDashing()) {
+                        pos.x += vel.x;
+                        pos.y += vel.y;
+                    }
                 }
                 break;
                 

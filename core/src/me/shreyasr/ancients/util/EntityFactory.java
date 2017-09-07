@@ -52,7 +52,7 @@ public class EntityFactory {
             new AnimatedAttack(),
             new Knockback(new Pos(0, 0)),
             new PlayerStats(5, 3000, 2000),
-            new BlinkDash()
+            new BlinkDash(400, 200)
         );
         
         CircleSlice swordHitbox = new CircleSlice(40, 90, 45);
