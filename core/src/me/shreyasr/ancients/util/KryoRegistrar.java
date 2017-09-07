@@ -13,6 +13,7 @@ import me.shreyasr.ancients.component.attack.AnimatedAttack;
 import me.shreyasr.ancients.component.attack.InstantAttack;
 import me.shreyasr.ancients.component.attack.WeaponAnimation;
 import me.shreyasr.ancients.component.attack.WeaponData;
+import me.shreyasr.ancients.component.dash.BlinkDash;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.GameState;
 import me.shreyasr.ancients.game.PlayerData;
@@ -77,6 +78,7 @@ public class KryoRegistrar {
         kryo.register(WeaponData.DirectionPredicate.class);
         kryo.register(Knockback.class);
         kryo.register(PlayerStats.class);
+        kryo.register(BlinkDash.class);
         
         kryo.addDefaultSerializer(Color.class, new Serializer<Color>() {
             @Override

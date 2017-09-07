@@ -2,6 +2,7 @@ package me.shreyasr.ancients.game;
 
 import lombok.ToString;
 import me.shreyasr.ancients.component.*;
+import me.shreyasr.ancients.component.dash.Dash;
 import me.shreyasr.ancients.network.InputData;
 
 @ToString(includeFieldNames = false, exclude = { "data" })
@@ -24,9 +25,11 @@ public class GamePlayer {
     public TexTransform ttc;
     public Knockback knockback;
     public PlayerStats stats;
+    public Dash dash;
     
     public GamePlayer(int id, PlayerData data, Pos pos, Status currentStatus, TexTransform ttc, DirectionalAnimation animation,
-                      Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack, Knockback knockback, PlayerStats stats) {
+                      Hitbox hitbox, WeaponHitbox weaponHitbox, Attack attack, Knockback knockback, PlayerStats stats,
+                      Dash dash) {
         this.id = id;
         this.data = data;
         this.pos = pos;
@@ -38,12 +41,13 @@ public class GamePlayer {
         this.currentAttack = attack;
         this.knockback = knockback;
         this.stats = stats;
+        this.dash = dash;
     }
     
     public GamePlayer(GamePlayer other) {
         this(other.id, other.data, new Pos(other.pos), other.currentStatus, new TexTransform(other.ttc),
                 new DirectionalAnimation(other.animation), new Hitbox(other.hitbox), new WeaponHitbox(other.weaponHitbox),
-                other.currentAttack.copy(), new Knockback(other.knockback), new PlayerStats(other.stats));
+                other.currentAttack.copy(), new Knockback(other.knockback), new PlayerStats(other.stats), other.dash.copy());
         this.input = other.input;
         this.lastInput = other.lastInput;
     }
@@ -64,7 +68,7 @@ public class GamePlayer {
                 }
     
                 if (input.dash) {
-                    stats.currentHealth = 0;
+                    dash.beginDash(data, deltaMillis, pos, input);
                 }
             
                 hitbox.isBeingHit = false;
@@ -76,9 +80,11 @@ public class GamePlayer {
                         }
                         hitbox.isBeingHit = true;
                         knockback.hitOrigin.set(otherPlayer.pos);
+                        dash.cancel();
                     }
                 }
-            
+                
+                dash.update(data, deltaMillis, pos);
                 knockback.update(data, deltaMillis, pos, hitbox.isBeingHit);
                 currentAttack.update(data, deltaMillis, pos, input, weaponHitbox);
                 animation.update(data, deltaMillis, vel.x != 0 || vel.y != 0, vel.getDirDegrees());

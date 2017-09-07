@@ -7,6 +7,7 @@ import me.shreyasr.ancients.component.*;
 import me.shreyasr.ancients.component.attack.AnimatedAttack;
 import me.shreyasr.ancients.component.attack.WeaponAnimation;
 import me.shreyasr.ancients.component.attack.WeaponData;
+import me.shreyasr.ancients.component.dash.BlinkDash;
 import me.shreyasr.ancients.game.GamePlayer;
 import me.shreyasr.ancients.game.PlayerData;
 
@@ -50,7 +51,8 @@ public class EntityFactory {
             new WeaponHitbox(new CircleSlice(0, 0, 0)),
             new AnimatedAttack(),
             new Knockback(new Pos(0, 0)),
-            new PlayerStats(5, 3000, 2000)
+            new PlayerStats(5, 3000, 2000),
+            new BlinkDash()
         );
         
         CircleSlice swordHitbox = new CircleSlice(40, 90, 45);

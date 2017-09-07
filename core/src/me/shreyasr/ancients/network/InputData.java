@@ -40,6 +40,7 @@ public class InputData implements KryoSerializable {
         mousePos = kryo.readObjectOrNull(input, Pos.class);
     }
 
+    /** The mouse position in the world, not in the window */
     public Pos mousePos;
     public boolean moveUp;
     public boolean moveLeft;
